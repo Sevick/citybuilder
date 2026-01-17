@@ -41,6 +41,11 @@ def check(suggested_vertex, neighbour, newfront):
     -------
     newfront : list<Vertex>
     """
+    # Check if suggested_vertex.coords contains only finite values
+    if not np.all(np.isfinite(suggested_vertex.coords)):
+        print(f"Warning: suggested_vertex.coords contains non-finite values: {suggested_vertex.coords}")
+        return newfront
+
     #Checks if Neighborbar is in Bounds
     if (abs(suggested_vertex.coords[0])>singleton.border[0]-singleton.maxLength) or (abs(suggested_vertex.coords[1])>singleton.border[1]-singleton.maxLength):
         return newfront

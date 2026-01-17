@@ -6,7 +6,7 @@ import numpy as np
 
 gui=None
 
-def main():
+def submain():
     """ Reads list of procedural_city_generation.polygons.Polygon2D objects from file
     and constructs buildings on top of these. The buildings consist of Polygon3D objects,
     which are saved to /outputs/polygons.txt. See merger module for more details.
@@ -28,6 +28,7 @@ def main():
     import pickle
     with open(path+"/temp/"+singleton.input_name+"_polygons.txt", "rb") as f:
         polylist=pickle.loads(f.read())
+        
     if gui is None:
         import matplotlib.pyplot as plt
 
@@ -187,3 +188,15 @@ def main():
     mergedpolys=merge_polygons(polygons, textures, singleton.output_name)
 
     return 0
+
+def main():
+
+    try:
+        _submain()
+    except Exception:
+        import traceback, warnings
+        warnings.warn(":warning: \nre-runing because exception caught")
+        traceback.print_exc()
+    else:
+        flag = False
+        print("end...")

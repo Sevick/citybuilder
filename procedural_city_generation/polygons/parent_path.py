@@ -7,7 +7,7 @@ def parent_path(depth=1):
     """
     path = os.path.abspath(__file__)
     n = 0
-    for i in xrange(1, len(path)+1):
+    for i in range(1, len(path)+1):
         if path[-i] == "/":
             n += 1
         if n == depth:
