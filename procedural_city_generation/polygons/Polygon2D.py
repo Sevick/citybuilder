@@ -23,8 +23,11 @@ class Edge(object):
         self.vertices = np.array((vertex1, vertex2))
         self.dir_vector = vertex2 - vertex1
         self.length = np.linalg.norm(self.dir_vector)
-        v = self.dir_vector/self.length
-        self.n = np.array((v[1], -v[0]))
+        if self.length == 0:
+            self.n = np.array((0.0, 0.0))
+        else:
+            v = self.dir_vector/self.length
+            self.n = np.array((v[1], -v[0]))
 
     def __getitem__(self, i):
         return self.vertices[i]
@@ -40,15 +43,21 @@ class Polygon2D(object):
     def __init__(self, in_list, poly_type="vacant"):
         """Input may be numpy-arrays or Edge-objects"""
 
-        if isinstance(in_list[0], Edge):
+        if not in_list:
+            self.edges = []
+            self.vertices = []
+        elif isinstance(in_list[0], Edge):
             self.edges = in_list
             self.vertices = [edge[0] for edge in self.edges]
         else:
             self.vertices = in_list
-            self.edges = [Edge(v1, v2) for v1, v2 in
-                            zip(in_list, in_list[1:]+[in_list[0]])]
-        self.is_convex = is_convex(self)
-        self.area = area(self)
+            if len(in_list) >= 2:
+                self.edges = [Edge(v1, v2) for v1, v2 in
+                                zip(in_list, in_list[1:]+[in_list[0]])]
+            else:
+                self.edges = []
+        self.is_convex = is_convex(self) if len(self.edges) >= 3 else False
+        self.area = area(self) if len(self.edges) >= 3 else 0
         self.poly_type = poly_type
 
     def __repr__(self):
@@ -65,6 +74,8 @@ class Polygon2D(object):
                 color="g"
             elif t == "road":
                 color="k"
+            if not self.edges:
+                return
             composite=np.array([edge.vertices[0] for edge in self.edges]+[self.edges[0].vertices[0]])
             plt.plot(composite[:, 0], composite[:, 1], color=color)
 

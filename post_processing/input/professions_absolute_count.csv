@@ -1,0 +1,236 @@
+GroupID,Synthetic ID,Name,Population %,Count
+0,0-0,grain_merchant,1.09,109
+0,0-1,grain_measurer,0.73,73
+0,0-2,grain_warehouse_keeper,0.91,91
+0,0-3,flour_merchant,0.82,82
+0,0-4,miller,1,100
+0,0-5,baker,1.81,181
+0,0-6,pastry_baker,0.73,73
+0,0-7,bread_seller,1.36,136
+0,0-8,butcher,1.09,109
+0,0-9,pork_butcher,0.82,82
+0,0-10,beef_butcher,0.64,64
+0,0-11,fishmonger,1.18,118
+0,0-12,salt_fish_seller,0.73,73
+0,0-13,olive_oil_merchant,1,100
+0,0-14,olive_oil_presser,0.54,54
+0,0-15,vegetable_seller,1.27,127
+0,0-16,fruit_seller,1.18,118
+0,0-17,cheese_merchant,0.82,82
+0,0-18,dairy_producer,0.64,64
+0,0-19,livestock_trader,1.14,114
+1,1-0,wool_merchant,0.38,38
+1,1-1,wool_sorter,0.3,30
+1,1-2,spinner,0.45,45
+1,1-3,thread_merchant,0.22,22
+1,1-4,weaver,0.9,90
+1,1-5,linen_weaver,0.52,52
+1,1-6,cloth_dyer,0.6,60
+1,1-7,purple_dye_producer,0.15,15
+1,1-8,fuller,0.75,75
+1,1-9,cloth_finisher,0.38,38
+1,1-10,tailor,0.45,45
+1,1-11,cloak_maker,0.3,30
+1,1-12,tunic_maker,0.38,38
+1,1-13,cloth_merchant,0.22,22
+2,2-0,tanner,0.6,60
+2,2-1,leather_cutter,0.4,40
+2,2-2,shoemaker,0.9,90
+2,2-3,sandal_maker,0.7,70
+2,2-4,saddlemaker,0.4,40
+2,2-5,harness_maker,0.3,30
+2,2-6,leather_bag_maker,0.2,20
+3,3-0,potter,0.6,60
+3,3-1,ceramic_painter,0.3,30
+3,3-2,kiln_operator,0.4,40
+3,3-3,amphora_maker,0.5,50
+3,3-4,lamp_maker,0.3,30
+3,3-5,roof_tile_maker,0.3,30
+3,3-6,ceramic_merchant,0.1,10
+4,4-0,glassblower,0.35,35
+4,4-1,glass_cutter,0.2,20
+4,4-2,glass_engraver,0.15,15
+4,4-3,glass_bead_maker,0.15,15
+4,4-4,glass_merchant,0.15,15
+5,5-0,blacksmith,0.54,54
+5,5-1,bronzesmith,0.36,36
+5,5-2,coppersmith,0.36,36
+5,5-3,goldsmith,0.27,27
+5,5-4,silversmith,0.22,22
+5,5-5,jeweler,0.27,27
+5,5-6,armorer,0.36,36
+5,5-7,swordsmith,0.18,18
+5,5-8,toolmaker,0.31,31
+5,5-9,nail_maker,0.27,27
+5,5-10,lock_maker,0.18,18
+5,5-11,metal_engraver,0.18,18
+6,6-0,stonemason,0.55,55
+6,6-1,stone_cutter,0.47,47
+6,6-2,brickmaker,0.39,39
+6,6-3,bricklayer,0.63,63
+6,6-4,carpenter,0.55,55
+6,6-5,roofer,0.39,39
+6,6-6,plasterer,0.47,47
+6,6-7,wall_painter,0.31,31
+6,6-8,mosaicist,0.24,24
+6,6-9,sculptor,0.16,16
+6,6-10,marble_worker,0.24,24
+6,6-11,construction_laborer,1.1,110
+7,7-0,cabinet_maker,0.4,40
+7,7-1,furniture_maker,0.5,50
+7,7-2,chair_maker,0.3,30
+7,7-3,table_maker,0.3,30
+7,7-4,wheelwright,0.4,40
+7,7-5,cooper,0.5,50
+7,7-6,ship_carpenter,0.3,30
+7,7-7,boat_builder,0.3,30
+8,8-0,lamp_maker,0.3,30
+8,8-1,utensil_maker,0.4,40
+8,8-2,basket_maker,0.35,35
+8,8-3,rope_maker,0.35,35
+8,8-4,mat_weaver,0.3,30
+8,8-5,tool_merchant,0.3,30
+9,9-0,merchant,1.2,120
+9,9-1,shopkeeper,1.5,150
+9,9-2,market_vendor,1.8,180
+9,9-3,auctioneer,0.6,60
+9,9-4,broker,0.7,70
+9,9-5,wholesaler,0.9,90
+9,9-6,retail_trader,1.4,140
+9,9-7,import_merchant,0.8,80
+9,9-8,export_merchant,0.1,10
+10,10-0,banker,0.3,30
+10,10-1,lender,0.25,25
+10,10-2,money_changer,0.35,35
+10,10-3,accountant,0.2,20
+10,10-4,treasurer,0.2,20
+10,10-5,financial_clerk,0.2,20
+11,11-0,carter,0.7,70
+11,11-1,wagon_driver,0.6,60
+11,11-2,porter,0.8,80
+11,11-3,warehouse_laborer,0.7,70
+11,11-4,dock_worker,0.6,60
+11,11-5,ship_crew,0.5,50
+11,11-6,ship_captain,0.3,30
+11,11-7,stable_keeper,0.2,20
+11,11-8,animal_handler,0.1,10
+12,12-0,tavern_keeper,0.8,80
+12,12-1,innkeeper,0.5,50
+12,12-2,cook,0.7,70
+12,12-3,street_food_vendor,0.9,90
+12,12-4,wine_server,0.4,40
+12,12-5,beer_brewer,0.3,30
+12,12-6,meal_vendor,0.4,40
+13,13-0,barber,0.7,70
+13,13-1,hairdresser,0.5,50
+13,13-2,laundress,0.6,60
+13,13-3,bath_attendant,0.8,80
+13,13-4,masseur,0.4,40
+13,13-5,perfume_seller,0.3,30
+13,13-6,cosmetics_merchant,0.2,20
+14,14-0,teacher,0.2,20
+14,14-1,tutor,0.2,20
+14,14-2,scribe,0.25,25
+14,14-3,copyist,0.15,15
+14,14-4,librarian,0.05,5
+14,14-5,philosopher,0.05,5
+14,14-6,astrologer,0.1,10
+15,15-0,doctor,0.4,40
+15,15-1,surgeon,0.25,25
+15,15-2,midwife,0.3,30
+15,15-3,herbalist,0.2,20
+15,15-4,dentist,0.1,10
+15,15-5,bone_setter,0.1,10
+15,15-6,medical_assistant,0.15,15
+16,16-0,priest,0.4,40
+16,16-1,temple_attendant,0.3,30
+16,16-2,sacrificial_assistant,0.25,25
+16,16-3,diviner,0.2,20
+16,16-4,oracle_interpreter,0.15,15
+16,16-5,religious_singer,0.2,20
+17,17-0,magistrate_assistant,0.4,40
+17,17-1,city_clerk,0.35,35
+17,17-2,record_keeper,0.35,35
+17,17-3,tax_collector,0.4,40
+17,17-4,census_official,0.25,25
+17,17-5,public_messenger,0.25,25
+18,18-0,soldier,2.7,270
+18,18-1,military_trainer,0.6,60
+18,18-2,armorer,0.5,50
+18,18-3,military_clerk,0.4,40
+18,18-4,supply_officer,0.3,30
+19,19-0,actor,0.4,40
+19,19-1,musician,0.4,40
+19,19-2,dancer,0.3,30
+19,19-3,gladiator_trainer,0.3,30
+19,19-4,arena_worker,0.3,30
+19,19-5,circus_performer,0.2,20
+19,19-6,poet,0.1,10
+20,20-0,house_steward,0.8,80
+20,20-1,house_cook,1,100
+20,20-2,house_guard,0.9,90
+20,20-3,maid,1.5,150
+20,20-4,house_tutor,0.6,60
+20,20-5,child_nurse,0.8,80
+20,20-6,personal_attendant,0.9,90
+21,21-0,street_vendor,0.6,60
+21,21-1,itinerant_merchant,0.4,40
+21,21-2,fortune_teller,0.3,30
+21,21-3,street_performer,0.4,40
+21,21-4,city_guide,0.3,30
+21,21-5,messenger,0.3,30
+21,21-6,odd_job_laborer,0.2,20
+22,22-0,prostitute,0.6,60
+22,22-1,brothel_keeper,0.3,30
+22,22-2,gambling_operator,0.25,25
+22,22-3,dice_game_organizer,0.2,20
+22,22-4,drinking_house_host,0.15,15
+23,23-0,pickpocket,0.2,20
+23,23-1,burglar,0.15,15
+23,23-2,thief,0.2,20
+23,23-3,fence,0.15,15
+23,23-4,smuggler,0.15,15
+23,23-5,extortionist,0.1,10
+23,23-6,black_market_trader,0.05,5
+24,24-0,gang_leader,0.1,10
+24,24-1,gang_lieutenant,0.1,10
+24,24-2,gang_enforcer,0.15,15
+24,24-3,racketeer,0.1,10
+24,24-4,illegal_goods_distributor,0.05,5
+25,25-0,beggar,0.3,30
+25,25-1,vagrant,0.2,20
+25,25-2,runaway_slave,0.15,15
+25,25-3,con_artist,0.15,15
+25,25-4,charlatan,0.1,10
+25,25-5,wandering_preacher,0.1,10
+26,26-0,"Quarry workers (stone, marble, tuff)",0.4,40
+26,26-1,Lime burners,0.15,15
+26,26-2,Ore miners,0.2,20
+26,26-3,Salt workers,0.15,15
+26,26-4,Sand and clay extractors,0.1,10
+27,27-0,Aqueduct engineers,0.2,20
+27,27-1,Aqueduct inspectors (curatores aquarum),0.15,15
+27,27-2,Pipe fitters,0.15,15
+27,27-3,Fountain keepers,0.1,10
+27,27-4,Public bath water technicians,0.1,10
+28,28-0,Night soil collectors,0.2,20
+28,28-1,Street cleaners,0.25,25
+28,28-2,Sewer workers,0.15,15
+28,28-3,Latrine attendants,0.1,10
+28,28-4,Dump managers,0.1,10
+29,29-0,Road maintenance crews,0.4,40
+29,29-1,Bridge inspectors,0.2,20
+29,29-2,Public building caretakers,0.3,30
+29,29-3,Monument cleaners,0.3,30
+29,29-4,Lamp lighters,0.3,30
+30,30-0,Advocates,0.2,20
+30,30-1,Legal scribes,0.15,15
+30,30-2,Court clerks,0.15,15
+30,30-3,Magistrate assistants,0.15,15
+30,30-4,Legal consultants,0.1,10
+30,30-5,Contract witnesses,0.05,5
+31,31-0,Slave traders,0.2,20
+31,31-1,Slave market brokers,0.15,15
+31,31-2,Slave trainers,0.15,15
+31,31-3,Slave supervisors,0.1,10
+31,31-4,Household slave managers,0.1,10

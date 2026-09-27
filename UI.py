@@ -27,10 +27,10 @@ def setup_matplotlib():
     if sys.version[0] == "3":
         import matplotlib
         try:
-            matplotlib.use("Qt4Agg")
+            matplotlib.use("Qt5Agg")
         except:
-            print("PyQt4 is not installed - outputs will only be saved as images and not be visible at runtime")
-            print("However, it is strongly recommended that you install PyQt4 in order to use the GUI")
+            print("PyQt5 is not installed - outputs will only be saved as images and not be visible at runtime")
+            print("However, it is strongly recommended that you install PyQt5 in order to use the GUI")
             matplotlib.use("agg")
 
 

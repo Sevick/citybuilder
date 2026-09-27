@@ -71,8 +71,14 @@ class GUI(QtWidgets.QMainWindow):
         # (Tab is created in window.py)
         if hasattr(self.ui, "export_roads_button"):
             self.ui.export_roads_button.clicked.connect(self.export_roads)
-        if hasattr(self.ui, "export_buildings_button"):
-            self.ui.export_buildings_button.clicked.connect(self.export_buildings)
+        if hasattr(self.ui, "export_csv_button"):
+            self.ui.export_csv_button.clicked.connect(self.export_csv)
+        # export_buildings_button removed; buildings are controlled by a checkbox now
+        if hasattr(self.ui, "scaleX_input") and hasattr(self.ui, "scaleY_input"):
+            validator = QtGui.QDoubleValidator(0.000001, 1.0e12, 6, self)
+            validator.setNotation(QtGui.QDoubleValidator.StandardNotation)
+            self.ui.scaleX_input.setValidator(validator)
+            self.ui.scaleY_input.setValidator(validator)
 
         sys.stderr=redirector
     
@@ -245,69 +251,192 @@ class GUI(QtWidgets.QMainWindow):
         global app
         app.processEvents()
 
-    def export_roads(self):
-        """Export the roadmap vertex graph as MASON-friendly CSV network files."""
-        try:
-            from procedural_city_generation.additional_stuff.Singleton import Singleton
-            from procedural_city_generation.additional_stuff import pickletools
-            from procedural_city_generation.export.mason_network import export_road_network_csv
-            import procedural_city_generation
-            import os
+    def _prepare_export_data(self):
+        from procedural_city_generation.additional_stuff.Singleton import Singleton
+        from procedural_city_generation.additional_stuff import pickletools
+        import procedural_city_generation
+        import os
+        import pickle
 
-            singleton = Singleton("roadmap")
-            input_name = getattr(singleton, "output_name", "output")
+        path = os.path.dirname(procedural_city_generation.__file__)
 
-            vertex_list = pickletools.reconstruct(input_name)
-            if not vertex_list:
-                print("No roadmap data found to export. Run Roadmap Generation first.")
-                return
+        vertex_list = None
+        roadmap_singleton = Singleton("roadmap")
+        roadmap_name = getattr(roadmap_singleton, "output_name", None) or "output"
+        vertex_list = pickletools.reconstruct(roadmap_name)
 
-            out_dir = os.path.join(os.path.dirname(procedural_city_generation.__file__), "outputs")
-            paths = export_road_network_csv(vertex_list, out_dir=out_dir, basename=input_name)
+        polygons = []
+        polys_name = None
 
-            print(f"Road network exported for MASON:\n  {paths.nodes_csv}\n  {paths.edges_csv}")
-            print(UI.donemessage)
-        except Exception:
-            import traceback
-            traceback.print_exc()
-            print(UI.errormessage)
+        bgen_singleton = Singleton("building_generation")
+        bgen_name = getattr(bgen_singleton, "output_name", None)
+        if bgen_name:
+            bgen_pickle = os.path.join(path, "temp", f"{bgen_name}_polygons.txt")
+            if os.path.exists(bgen_pickle):
+                with open(bgen_pickle, "rb") as f:
+                    polygons = pickle.loads(f.read())
 
-    def export_buildings(self):
-        """Export building/lots footprints as GeoJSON polygons."""
-        try:
-            from procedural_city_generation.additional_stuff.Singleton import Singleton
-            from procedural_city_generation.export.polygons_geojson import export_polygon2d_list_to_geojson
-            import procedural_city_generation
-            import os
-            import pickle
-
-            # We export polygons (footprints) produced by the polygons module.
+        if not polygons:
             polys_singleton = Singleton("polygons")
-            input_name = getattr(polys_singleton, "input_name", None)
-            if not input_name:
-                print("No polygons input configured. Run Polygon Extraction first.")
-                return
+            polys_name = getattr(polys_singleton, "input_name", None)
+            if polys_name:
+                poly_pickle = os.path.join(path, "temp", f"{polys_name}_polygons.txt")
+                if os.path.exists(poly_pickle):
+                    with open(poly_pickle, "rb") as f:
+                        polygons = pickle.loads(f.read())
 
-            path = os.path.dirname(procedural_city_generation.__file__)
-            poly_pickle = os.path.join(path, "temp", f"{input_name}_polygons.txt")
-            if not os.path.exists(poly_pickle):
-                print("No polygons data found to export. Run Polygon Extraction first.")
-                return
+        def _read_scale(line_edit):
+            if line_edit is None:
+                return None
+            text = line_edit.text().strip()
+            if not text:
+                return None
+            try:
+                value = float(text)
+            except ValueError:
+                return None
+            if value <= 0:
+                return None
+            return value
 
-            with open(poly_pickle, "rb") as f:
-                polygons = pickle.loads(f.read())
+        scale_x = _read_scale(getattr(self.ui, "scaleX_input", None))
+        scale_y = _read_scale(getattr(self.ui, "scaleY_input", None))
 
-            out_dir = os.path.join(path, "outputs")
-            out_path = os.path.join(out_dir, f"{input_name}_polygons.geojson")
-            export_polygon2d_list_to_geojson(polygons, out_path)
+        def _collect_points(verts, polys):
+            points = []
+            for v in verts or []:
+                try:
+                    points.append((float(v.coords[0]), float(v.coords[1])))
+                except Exception:
+                    continue
+            for poly in polys or []:
+                verts_list = getattr(poly, "vertices", None) or []
+                for vx, vy in verts_list:
+                    points.append((float(vx), float(vy)))
+            return points
 
-            print(f"Polygons exported to GeoJSON:\n  {out_path}")
+        def _normalize(value, min_v, max_v, scale):
+            if scale is None:
+                return value
+            if max_v <= min_v:
+                return 0.0
+            return (value - min_v) / (max_v - min_v) * scale
+
+        points = _collect_points(vertex_list, polygons)
+        if points and (scale_x is not None or scale_y is not None):
+            xs = [p[0] for p in points]
+            ys = [p[1] for p in points]
+            min_x, max_x = min(xs), max(xs)
+            min_y, max_y = min(ys), max(ys)
+
+            class _VertexProxy:
+                def __init__(self, src, coords):
+                    self.coords = coords
+                    if hasattr(src, "selfindex"):
+                        self.selfindex = src.selfindex
+                    if hasattr(src, "minor_road"):
+                        self.minor_road = src.minor_road
+                    self.neighbours = []
+
+            proxy_by_id = {}
+            normalized_vertices = []
+            for v in vertex_list or []:
+                nx = _normalize(float(v.coords[0]), min_x, max_x, scale_x)
+                ny = _normalize(float(v.coords[1]), min_y, max_y, scale_y)
+                proxy = _VertexProxy(v, [nx, ny])
+                proxy_by_id[id(v)] = proxy
+                normalized_vertices.append(proxy)
+
+            for v in vertex_list or []:
+                proxy = proxy_by_id.get(id(v))
+                if proxy is None:
+                    continue
+                neighbours = []
+                for n in getattr(v, "neighbours", []) or []:
+                    p = proxy_by_id.get(id(n))
+                    if p is not None:
+                        neighbours.append(p)
+                proxy.neighbours = neighbours
+
+            class _PolyProxy:
+                def __init__(self, src, vertices):
+                    self.vertices = vertices
+                    if hasattr(src, "poly_type"):
+                        self.poly_type = src.poly_type
+                    if hasattr(src, "name"):
+                        self.name = src.name
+                    if hasattr(src, "floors"):
+                        self.floors = src.floors
+
+            normalized_polygons = []
+            for poly in polygons or []:
+                verts_list = getattr(poly, "vertices", None) or []
+                scaled = []
+                for vx, vy in verts_list:
+                    nx = _normalize(float(vx), min_x, max_x, scale_x)
+                    ny = _normalize(float(vy), min_y, max_y, scale_y)
+                    scaled.append((nx, ny))
+                normalized_polygons.append(_PolyProxy(poly, scaled))
+
+            vertex_list = normalized_vertices
+            polygons = normalized_polygons
+
+        export_name = roadmap_name if vertex_list else (polys_name or "output")
+        merge_roads = bool(getattr(getattr(self.ui, "merge_roads_checkbox", None), "isChecked", lambda: False)())
+        export_buildings = bool(
+            getattr(getattr(self.ui, "export_buildings_checkbox", None), "isChecked", lambda: True)()
+        )
+        return {
+            "path": path,
+            "export_name": export_name,
+            "vertex_list": vertex_list or [],
+            "polygons": polygons or [],
+            "merge_roads": merge_roads,
+            "export_buildings": export_buildings,
+        }
+
+    def export_roads(self):
+        """Export junctions, roads, and (optionally) buildings to a combined JSON file."""
+        try:
+            from procedural_city_generation.export.city_json import export_city_json
+            export_data = self._prepare_export_data()
+            out_dir = os.path.join(export_data["path"], "outputs")
+            out_path = os.path.join(out_dir, f"{export_data['export_name']}_city.json")
+            export_city_json(
+                export_data["vertex_list"],
+                export_data["polygons"],
+                out_path,
+                merge_roads=export_data["merge_roads"],
+                export_buildings=export_data["export_buildings"],
+            )
+            print(f"City JSON exported:\n  {out_path}")
             print(UI.donemessage)
         except Exception:
             import traceback
             traceback.print_exc()
             print(UI.errormessage)
 
+    def export_csv(self):
+        """Export junctions, edges, roads, and buildings as CSV files."""
+        try:
+            from procedural_city_generation.export.city_csv import export_city_csv
+            export_data = self._prepare_export_data()
+            out_dir = os.path.join(export_data["path"], "outputs", f"{export_data['export_name']}_csv")
+            written = export_city_csv(
+                export_data["vertex_list"],
+                export_data["polygons"],
+                out_dir,
+                merge_roads=export_data["merge_roads"],
+                export_buildings=export_data["export_buildings"],
+            )
+            print("City CSV exported:")
+            for name in ["nodes", "edges", "roads", "buildings", "buildings_shape"]:
+                print(f"  {name}: {written[name]}")
+            print(UI.donemessage)
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            print(UI.errormessage)
 
 class FigureSaver:
     class __FigureSaver:

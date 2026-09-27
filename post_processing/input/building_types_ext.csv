@@ -1,0 +1,41 @@
+BuildingTypeID,RomanName,EnglishName,DistrictType,LocationsSpecific
+RES-01,Insula,Apartment Block,High-Density Residential,Densely packed in the urban core and near commercial hubs.
+RES-02,Domus,Private Mansion,Elite Enclaves,Elevated hills or quiet suburbs with low traffic.
+RES-03,Praetorium / Palatium,Governor's Palace / Imperial Residence,Monumental / Elite Enclaves,Central administrative heights or commanding views of the city.
+COM-01,Taberna,Street Shop / Workshop,High-Density Residential,Ground floors of residential and public buildings lining the streets.
+COM-02,Macellum,Indoor Provision Market,Monumental / Commercial,Adjacent to the main forum or central plazas.
+COM-03,Thermopolium / Popina,Tavern / Fast Food Counter,High-Density Residential,Busy street corners and near entertainment venues.
+COM-04,Lupanar,Brothel,High-Density Residential / Entertainment,Side alleys or near the city gates and docks.
+COM-05,Stationes,Trade Guild Offices,Monumental / Commercial,Clustered near specialized forums or the port.
+COM-06,Taberna Argentaria,Bank / Money Changer,Monumental Core,Integrated into the porticos of the main forum.
+IND-01,Horreum,Warehouse,Industrial & Logistic,"Near river docks, harbors, or city gates for grain and oil storage."
+IND-02,Pistrinum,Bakery & Mill,High-Density / Industrial,Distributed locally; often near water sources for milling.
+IND-03,Fullonica,Industrial Laundry,Industrial / High-Density,Downwind city edges or specialized wool-processing districts.
+IND-04,Officina,Workshop (Glass/Metal/Pottery),High-Density Residential,Industrial outskirts or specialized artisan quarters.
+IND-05,Ustrinum,Crematorium,Perimeter / Suburban,Located within the necropolis zones outside city walls.
+IND-06,Figlina,Pottery / Brick Kiln,Industrial / Perimeter,City outskirts near clay pits and fuel sources.
+IND-07,Navalia,Shipyards / Docks,Industrial & Logistic,Directly on the waterfront or harbor basin.
+GOV-01,Basilica,Civic Hall / Law Court,Monumental Core,Flanking the main city forum.
+GOV-02,Curia,Council House,Monumental Core,Facing the forum; the seat of local government.
+GOV-03,Tabularium,State Archives,Monumental Core,"Centrally located, often on high ground overlooking the forum."
+GOV-04,Moneta,Mint,Monumental Core,High-security areas near the treasury or capitol temple.
+GOV-05,Carcer,Prison,Monumental Core,Near the forum or law courts for holding prisoners.
+GOV-06,Castellum Divisorum,Toll House / Gatehouse,Perimeter,Integrated into the city gates (Portae).
+REL-01,Templum,Major Temple,Monumental Core,Dominating the forum or the city's highest point (Acropolis).
+REL-02,Aedes / Sacellum,Small Shrine,High-Density Residential,"Crossroads, neighborhood squares, and private homes."
+REL-03,Mithraeum,Underground Cult Temple,High-Density Residential,Subterranean rooms or caves in residential basements.
+REL-04,Fanum,Local/Rural Shrine,Residential / Suburban,Greener city edges or small local plazas.
+ENT-01,Thermae,Massive Public Baths,Monumental / Leisure,Central urban locations with heavy aqueduct access.
+ENT-02,Balneum,Neighborhood Bathhouse,High-Density Residential,Local blocks within every residential district.
+ENT-03,Amphitheatrum,Gladiatorial Arena,Leisure / Perimeter,City outskirts for easy crowd exit and mass transport.
+ENT-04,Circus,Chariot Racing Track,Leisure / Perimeter,"Long flat valleys, usually just outside the core city walls."
+ENT-05,Theatrum / Odeon,Theater / Music Hall,Monumental / Leisure,Natural hillsides or heavy-arched urban structures.
+ENT-06,Bibliotheca,Library,Monumental Core,Attached to forums or integrated into massive Thermae.
+ENT-07,Gymnasium / Palaestra,Exercise Yard,Monumental / Leisure,Usually the central courtyard of a bath complex or a stand-alone field.
+INF-01,Nymphaeum,Monumental Fountain,Monumental / High-Density,Major intersections and the ends of aqueduct lines.
+INF-02,Latrina,Public Toilet,High-Density / Leisure,Connected to baths and sewer lines in high-traffic areas.
+INF-03,Porticus,Covered Colonnade,Monumental Core,Lining main roads and framing open public plazas.
+INF-04,Castellum Aquae,Water Distribution Tower,Infrastructure,The high-point entry for aqueducts into the city.
+INF-05,Cloaca,Main Sewer / Drainage,Infrastructure,"Underground, following the natural slope of the city terrain."
+FUN-01,Mausoleum,Monumental Tomb,Perimeter / Suburban,Lining the main highways leading away from the city gates.
+FUN-02,Columbarium,Urn Tomb Complex,Perimeter / Suburban,Designated cemetery zones outside the legal city boundary.

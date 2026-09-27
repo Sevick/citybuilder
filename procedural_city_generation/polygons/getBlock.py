@@ -28,31 +28,41 @@ def p_in_poly(poly, point):
 def getBlock(wedges, vertex_list):
     '''Calculate block to be divided into lots, as well as street polygons'''
 
+    if not wedges:
+        return []
 
-    old_vertices = [vertex_list[wedge.b] for wedge in wedges]
-    old_poly = Polygon2D([v.coords for v in old_vertices])
+    try:
+        old_vertices = [vertex_list[wedge.b] for wedge in wedges]
+    except Exception:
+        warnings.warn(":warning: invalid wedge list while extracting block")
+        return []
+
+    if len(old_vertices) < 3:
+        return [Polygon2D([v.coords for v in old_vertices], poly_type="road")]
+
+    old_poly = Polygon2D([v.coords for v in old_vertices], poly_type="road")
+
+    if len(old_poly.vertices) < 3:
+        return [old_poly]
 
     new_vertices = []
     polylist = []
     last2 = []
 
     for i in range(len(old_vertices)):
-
-        #Calculate position of new vertex
         alpha = wedges[i-1].alpha
+        a = b = c = None
         try:
             a, b, c = old_vertices[i-2], old_vertices[i-1], old_vertices[i]
-        except Exception:
-            warnings.warn(":warning: exception caught")
-            print(f"{i} a:{i-2} b:{i-1} c:{i}")
-        else:
             v1 = a.coords - b.coords
             v2 = c.coords - b.coords
-            n1 = np.array((-v1[1], v1[0]))/np.linalg.norm(v1)
-            n2 = np.array((v2[1], -v2[0]))/np.linalg.norm(v2)
+            len_v1 = np.linalg.norm(v1)
+            len_v2 = np.linalg.norm(v2)
+            if len_v1 == 0 or len_v2 == 0:
+                raise ValueError("degenerate polygon edge")
+            n1 = np.array((-v1[1], v1[0]))/len_v1
+            n2 = np.array((v2[1], -v2[0]))/len_v2
 
-            #Change lengths of normal vectors depending on whether each
-            #edge is a minor road or a main road
             if b.minor_road or a.minor_road:
                 n1 *= singleton.minor_factor
             else:
@@ -61,20 +71,19 @@ def getBlock(wedges, vertex_list):
                 n2 *= singleton.minor_factor
             else:
                 n2 *= singleton.main_factor
+        except Exception:
+            warnings.warn(":warning: exception caught while extracting block geometry")
+            print(f"{i} a:{i-2} b:{i-1} c:{i}")
+            return [old_poly]
 
-        #Check if current vertex is dead end
         if not 0 - 0.001 < alpha < 0 + 0.001:
-            #Not a dead end: move edges which share this vertex
-            #inwards along their normal vectors, find intersection
             try:
                 intersection = np.linalg.solve(np.array(((v1), (v2))).T, (b.coords+n2)-(b.coords+n1))
             except np.linalg.LinAlgError:
                 warnings.warn(f"{str(v1)}, {str(v2)} angle:{str(wedges[i-1].alpha)}")
                 return [old_poly]
             new = b.coords + n1 + intersection[0]*v1
-            #Check if new vertex is in old polygon
             if p_in_poly(old_poly.edges, new):
-                #Append new vertex to lot polygon
                 new_vertices.append(new)
                 these2 = [b.coords, new]
                 if last2:
@@ -82,11 +91,10 @@ def getBlock(wedges, vertex_list):
                     polylist.append(Polygon2D(street_vertices, poly_type="road"))
                 last2 = these2[::-1]
             else:
-                #New vertex not in polygon, return old polygon as street polygon
                 return [old_poly]
         else:
-            #Dead end: determine two new vertices by adding the two normals
-            #to current vector, then check if these are in old polygon
+            if b is None:
+                return [old_poly]
             new1, new2 = b.coords + n1, b.coords + n2
             if p_in_poly(old_poly.edges, new1) and p_in_poly(old_poly.edges, new2):
                 new_vertices += [new1, new2]
@@ -98,13 +106,14 @@ def getBlock(wedges, vertex_list):
                 last2 = [new2, b.coords]
 
             else:
-                old_poly.poly_type="road"
                 return [old_poly]
+
+    if not new_vertices or not last2:
+        return [old_poly]
+
     street_vertices = last2 + [old_vertices[-1].coords, new_vertices[0]]
     polylist.append(Polygon2D(street_vertices, poly_type="road"))
 
-
-    #All new vertices are in old polygon: append block polygon
     block_poly = Polygon2D(new_vertices)
     if block_poly.area < singleton.max_area:
         block_poly.poly_type="lot"
@@ -118,5 +127,3 @@ if __name__ == "__main__":
     for p in getBlock(polys[1], vertices):
         p.selfplot()
     plt.show()
-
-

@@ -1,0 +1,236 @@
+BuildingTypeID,BuildingTypeName,ProfessionID,MinNumberOfPeople,MaxNumberOfPeople
+1,Granary and Grain Office,0-0,1,6
+1,Granary and Grain Office,0-1,1,6
+1,Granary and Grain Office,0-2,1,6
+2,Flour Mill,0-3,1,12
+2,Flour Mill,0-4,2,12
+3,Bakery,0-5,2,10
+3,Bakery,0-6,2,10
+3,Bakery,0-7,1,10
+4,Butcher Shop,0-8,1,6
+4,Butcher Shop,0-9,1,6
+4,Butcher Shop,0-10,1,6
+5,Fish Market,0-11,1,6
+5,Fish Market,0-12,1,6
+6,Oil Press and Oil Shop,0-13,1,6
+6,Oil Press and Oil Shop,0-14,1,6
+7,Produce Stall,0-15,1,4
+7,Produce Stall,0-16,1,4
+8,Dairy and Livestock Yard,0-17,1,10
+8,Dairy and Livestock Yard,0-18,2,10
+8,Dairy and Livestock Yard,0-19,2,10
+25,Market Hall and Shop Row,1-0,1,5
+9,Textile Workshop,1-1,2,12
+9,Textile Workshop,1-2,2,12
+25,Market Hall and Shop Row,1-3,1,5
+9,Textile Workshop,1-4,2,12
+9,Textile Workshop,1-5,2,12
+10,Dye House and Fullery,1-6,1,8
+10,Dye House and Fullery,1-7,1,8
+10,Dye House and Fullery,1-8,1,8
+10,Dye House and Fullery,1-9,1,8
+11,Tailor Shop,1-10,1,8
+11,Tailor Shop,1-11,1,8
+11,Tailor Shop,1-12,1,8
+25,Market Hall and Shop Row,1-13,1,5
+12,Tannery,2-0,2,10
+13,Leather and Harness Workshop,2-1,1,8
+13,Leather and Harness Workshop,2-2,1,8
+13,Leather and Harness Workshop,2-3,1,8
+13,Leather and Harness Workshop,2-4,1,8
+13,Leather and Harness Workshop,2-5,1,8
+13,Leather and Harness Workshop,2-6,1,8
+14,Pottery Workshop and Kiln Yard,3-0,2,15
+14,Pottery Workshop and Kiln Yard,3-1,2,15
+14,Pottery Workshop and Kiln Yard,3-2,2,15
+14,Pottery Workshop and Kiln Yard,3-3,2,15
+14,Pottery Workshop and Kiln Yard,3-4,2,15
+14,Pottery Workshop and Kiln Yard,3-5,2,15
+25,Market Hall and Shop Row,3-6,1,5
+15,Glass Workshop,4-0,1,8
+15,Glass Workshop,4-1,1,8
+15,Glass Workshop,4-2,1,8
+15,Glass Workshop,4-3,1,8
+25,Market Hall and Shop Row,4-4,1,5
+16,Metal Forge and Smithy,5-0,1,10
+16,Metal Forge and Smithy,5-1,1,10
+16,Metal Forge and Smithy,5-2,1,10
+17,Jewelry Workshop,5-3,1,6
+17,Jewelry Workshop,5-4,1,6
+17,Jewelry Workshop,5-5,1,6
+18,Armory Workshop,5-6,1,8
+18,Armory Workshop,5-7,1,8
+16,Metal Forge and Smithy,5-8,1,10
+16,Metal Forge and Smithy,5-9,1,10
+16,Metal Forge and Smithy,5-10,1,10
+17,Jewelry Workshop,5-11,1,6
+19,Stone Yard and Masonry Shop,6-0,2,20
+19,Stone Yard and Masonry Shop,6-1,2,20
+20,Brickworks and Construction Yard,6-2,3,20
+20,Brickworks and Construction Yard,6-3,3,20
+20,Brickworks and Construction Yard,6-4,3,20
+20,Brickworks and Construction Yard,6-5,3,20
+20,Brickworks and Construction Yard,6-6,3,20
+20,Brickworks and Construction Yard,6-7,3,20
+20,Brickworks and Construction Yard,6-8,3,20
+19,Stone Yard and Masonry Shop,6-9,2,20
+19,Stone Yard and Masonry Shop,6-10,2,20
+20,Brickworks and Construction Yard,6-11,3,20
+23,Furniture Workshop,7-0,1,8
+23,Furniture Workshop,7-1,1,8
+23,Furniture Workshop,7-2,1,8
+23,Furniture Workshop,7-3,1,8
+21,Carpentry Workshop,7-4,1,8
+23,Furniture Workshop,7-5,1,8
+22,Shipyard and Boatworks,7-6,2,15
+22,Shipyard and Boatworks,7-7,2,15
+24,Household Goods Workshop,8-0,1,6
+24,Household Goods Workshop,8-1,1,6
+24,Household Goods Workshop,8-2,1,6
+24,Household Goods Workshop,8-3,1,6
+24,Household Goods Workshop,8-4,1,6
+25,Market Hall and Shop Row,8-5,1,5
+25,Market Hall and Shop Row,9-0,1,5
+25,Market Hall and Shop Row,9-1,1,6
+38,Street and Forum Stalls,9-2,1,6
+26,Exchange House and Counting House,9-3,1,8
+26,Exchange House and Counting House,9-4,1,8
+27,Warehouse and Port Depot,9-5,1,15
+25,Market Hall and Shop Row,9-6,1,5
+27,Warehouse and Port Depot,9-7,1,15
+27,Warehouse and Port Depot,9-8,1,15
+26,Exchange House and Counting House,10-0,1,8
+26,Exchange House and Counting House,10-1,1,8
+26,Exchange House and Counting House,10-2,1,8
+26,Exchange House and Counting House,10-3,1,8
+26,Exchange House and Counting House,10-4,1,8
+26,Exchange House and Counting House,10-5,1,8
+28,Stable and Cart Depot,11-0,1,8
+28,Stable and Cart Depot,11-1,1,8
+27,Warehouse and Port Depot,11-2,2,15
+27,Warehouse and Port Depot,11-3,2,20
+27,Warehouse and Port Depot,11-4,2,20
+27,Warehouse and Port Depot,11-5,2,20
+27,Warehouse and Port Depot,11-6,1,15
+28,Stable and Cart Depot,11-7,1,8
+28,Stable and Cart Depot,11-8,1,8
+29,Inn and Tavern,12-0,1,8
+29,Inn and Tavern,12-1,1,8
+29,Inn and Tavern,12-2,1,8
+38,Street and Forum Stalls,12-3,1,6
+29,Inn and Tavern,12-4,1,8
+29,Inn and Tavern,12-5,1,8
+29,Inn and Tavern,12-6,1,8
+30,Bathhouse and Personal Service House,13-0,1,8
+30,Bathhouse and Personal Service House,13-1,1,8
+10,Dye House and Fullery,13-2,1,8
+30,Bathhouse and Personal Service House,13-3,1,8
+30,Bathhouse and Personal Service House,13-4,1,8
+25,Market Hall and Shop Row,13-5,1,5
+25,Market Hall and Shop Row,13-6,1,5
+31,School and Library,14-0,1,8
+31,School and Library,14-1,1,8
+31,School and Library,14-2,1,8
+31,School and Library,14-3,1,8
+31,School and Library,14-4,1,8
+31,School and Library,14-5,1,8
+31,School and Library,14-6,1,8
+32,Medical Clinic and Herbal Shop,15-0,1,6
+32,Medical Clinic and Herbal Shop,15-1,1,6
+32,Medical Clinic and Herbal Shop,15-2,1,6
+32,Medical Clinic and Herbal Shop,15-3,1,6
+32,Medical Clinic and Herbal Shop,15-4,1,6
+32,Medical Clinic and Herbal Shop,15-5,1,6
+32,Medical Clinic and Herbal Shop,15-6,1,6
+33,Temple and Shrine,16-0,1,10
+33,Temple and Shrine,16-1,1,10
+33,Temple and Shrine,16-2,1,10
+33,Temple and Shrine,16-3,1,10
+33,Temple and Shrine,16-4,1,10
+33,Temple and Shrine,16-5,1,10
+34,Civic Office and Archive,17-0,1,10
+34,Civic Office and Archive,17-1,1,10
+34,Civic Office and Archive,17-2,1,10
+34,Civic Office and Archive,17-3,1,10
+34,Civic Office and Archive,17-4,1,10
+34,Civic Office and Archive,17-5,1,10
+35,Barracks and Training Ground,18-0,5,25
+35,Barracks and Training Ground,18-1,1,25
+18,Armory Workshop,18-2,1,8
+35,Barracks and Training Ground,18-3,1,25
+35,Barracks and Training Ground,18-4,1,25
+36,Theater Amphitheater and Circus,19-0,1,30
+36,Theater Amphitheater and Circus,19-1,1,30
+36,Theater Amphitheater and Circus,19-2,1,30
+36,Theater Amphitheater and Circus,19-3,1,30
+36,Theater Amphitheater and Circus,19-4,1,30
+36,Theater Amphitheater and Circus,19-5,1,30
+36,Theater Amphitheater and Circus,19-6,1,30
+37,Domus and Villa,20-0,1,12
+37,Domus and Villa,20-1,1,12
+37,Domus and Villa,20-2,1,12
+37,Domus and Villa,20-3,1,12
+37,Domus and Villa,20-4,1,12
+37,Domus and Villa,20-5,1,12
+37,Domus and Villa,20-6,1,12
+38,Street and Forum Stalls,21-0,1,6
+38,Street and Forum Stalls,21-1,1,6
+38,Street and Forum Stalls,21-2,1,6
+38,Street and Forum Stalls,21-3,1,6
+38,Street and Forum Stalls,21-4,1,6
+38,Street and Forum Stalls,21-5,1,6
+38,Street and Forum Stalls,21-6,2,20
+39,Brothel and Gambling House,22-0,1,8
+39,Brothel and Gambling House,22-1,1,8
+39,Brothel and Gambling House,22-2,1,8
+39,Brothel and Gambling House,22-3,1,8
+39,Brothel and Gambling House,22-4,1,8
+40,Black Market and Hideout,23-0,1,6
+40,Black Market and Hideout,23-1,1,6
+40,Black Market and Hideout,23-2,1,6
+40,Black Market and Hideout,23-3,1,6
+40,Black Market and Hideout,23-4,1,6
+40,Black Market and Hideout,23-5,1,6
+40,Black Market and Hideout,23-6,1,6
+40,Black Market and Hideout,24-0,1,8
+40,Black Market and Hideout,24-1,1,8
+40,Black Market and Hideout,24-2,1,6
+40,Black Market and Hideout,24-3,1,6
+40,Black Market and Hideout,24-4,1,6
+38,Street and Forum Stalls,25-0,1,6
+38,Street and Forum Stalls,25-1,1,6
+38,Street and Forum Stalls,25-2,1,6
+38,Street and Forum Stalls,25-3,1,6
+38,Street and Forum Stalls,25-4,1,6
+38,Street and Forum Stalls,25-5,1,6
+41,Quarry and Mine,26-0,5,30
+41,Quarry and Mine,26-1,5,30
+41,Quarry and Mine,26-2,5,30
+41,Quarry and Mine,26-3,5,30
+41,Quarry and Mine,26-4,5,40
+42,Aqueduct and Waterworks,27-0,2,15
+42,Aqueduct and Waterworks,27-1,2,15
+42,Aqueduct and Waterworks,27-2,2,15
+42,Aqueduct and Waterworks,27-3,1,15
+42,Aqueduct and Waterworks,27-4,2,15
+43,Sewer and Sanitation Depot,28-0,2,15
+43,Sewer and Sanitation Depot,28-1,2,15
+43,Sewer and Sanitation Depot,28-2,2,20
+43,Sewer and Sanitation Depot,28-3,1,15
+43,Sewer and Sanitation Depot,28-4,1,15
+44,Roadworks and Public Maintenance Depot,29-0,2,20
+44,Roadworks and Public Maintenance Depot,29-1,2,20
+44,Roadworks and Public Maintenance Depot,29-2,2,20
+44,Roadworks and Public Maintenance Depot,29-3,2,20
+44,Roadworks and Public Maintenance Depot,29-4,2,20
+45,Courthouse and Legal Office,30-0,1,8
+45,Courthouse and Legal Office,30-1,1,8
+45,Courthouse and Legal Office,30-2,1,8
+45,Courthouse and Legal Office,30-3,1,8
+45,Courthouse and Legal Office,30-4,1,8
+45,Courthouse and Legal Office,30-5,1,8
+46,Slave Market and Slave Quarters,31-0,1,12
+46,Slave Market and Slave Quarters,31-1,1,12
+46,Slave Market and Slave Quarters,31-2,1,12
+46,Slave Market and Slave Quarters,31-3,1,12
+46,Slave Market and Slave Quarters,31-4,1,12
