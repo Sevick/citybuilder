@@ -6,8 +6,6 @@ __pycache__/
 *.bat
 
 # Intellij
-.idea
-.idea/*
 *~
 
 # C extensions
@@ -82,3 +80,7 @@ doc/videos/procedural-city-generation.webm
 # manual
 doc/videos
 .vscode
+
+# Logs
+logs/
+*.log
