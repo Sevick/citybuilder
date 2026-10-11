@@ -1,6 +1,6 @@
 """Generate profession headcounts for a target population.
 
-This script reads ``input/professions_distribution.csv`` and writes a CSV with
+This script reads ``ext_data/professions_distribution.csv`` and writes a CSV with
 the columns ``ProfessionID`` and ``NumberOfPeople`` to ``output/``.
 """
 
@@ -16,7 +16,7 @@ from typing import Iterable
 
 DEFAULT_TOTAL_POPULATION = 10_000
 BASE_DIR = Path(__file__).resolve().parent
-DEFAULT_INPUT_PATH = BASE_DIR / "input" / "professions_distribution.csv"
+DEFAULT_INPUT_PATH = BASE_DIR / "ext_data" / "professions_distribution.csv"
 DEFAULT_OUTPUT_PATH = BASE_DIR / "output" / "population_professions.csv"
 PERCENT_DENOMINATOR = Decimal("100")
 
@@ -149,8 +149,17 @@ def build_argument_parser() -> argparse.ArgumentParser:
 	parser.add_argument(
 		"--input",
 		type=Path,
-		default=DEFAULT_INPUT_PATH,
-		help=f"Path to the professions distribution CSV. Defaults to {DEFAULT_INPUT_PATH}.",
+		default=None,
+		help="Path to the professions distribution CSV. Overrides --ext-data-folder.",
+	)
+	parser.add_argument(
+		"--ext-data-folder",
+		type=Path,
+		default=None,
+		help=(
+			"Folder containing external professions_distribution.csv. Defaults to "
+			f"{DEFAULT_INPUT_PATH.parent}."
+		),
 	)
 	parser.add_argument(
 		"--output",
@@ -164,10 +173,15 @@ def build_argument_parser() -> argparse.ArgumentParser:
 def main() -> int:
 	parser = build_argument_parser()
 	args = parser.parse_args()
+	input_path = args.input or (
+		args.ext_data_folder / DEFAULT_INPUT_PATH.name
+		if args.ext_data_folder is not None
+		else DEFAULT_INPUT_PATH
+	)
 
 	output_path = generate_population_csv(
 		total_population=args.total_population,
-		input_path=args.input,
+		input_path=input_path,
 		output_path=args.output,
 	)
 	print(f"Wrote profession population CSV to {output_path}")
@@ -176,4 +190,3 @@ def main() -> int:
 
 if __name__ == "__main__":
 	raise SystemExit(main())
-

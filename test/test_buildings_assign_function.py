@@ -227,4 +227,38 @@ def test_buildings_assign_function_cli_runs_standalone(tmp_path):
     assert "Assigned all target professions to buildings" in completed.stdout
 
 
+def test_buildings_assign_function_cli_accepts_separate_city_and_external_data_folders(tmp_path):
+    fixture = _build_fixture(tmp_path / "input")
+    ext_data_folder = tmp_path / "ext_data"
+    ext_data_folder.mkdir()
+    for name in ("professions", "mapping"):
+        source = fixture[name]
+        (ext_data_folder / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+    assignments_output = tmp_path / "building_function_assignments.csv"
+    workers_output = tmp_path / "building_function_workers.csv"
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_PATH),
+            "--input-folder",
+            str(fixture["buildings"].parent),
+            "--ext-data-folder",
+            str(ext_data_folder),
+            "--output",
+            str(assignments_output),
+            "--workers-output",
+            str(workers_output),
+            "--seed",
+            "7",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+        cwd=ROOT_DIR,
+    )
+
+    assert assignments_output.exists()
+    assert workers_output.exists()
+
 

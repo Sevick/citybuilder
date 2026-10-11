@@ -39,7 +39,7 @@ The `post_processing/` directory contains two Python scripts that enrich the gen
 - Guarantees the sum of allocated people exactly equals the target population
 - Uses `Decimal` arithmetic for precision
 
-**Input (`post_processing/input/professions_distribution.csv`):**
+**External data (`post_processing/ext_data/professions_distribution.csv`):**
 ```
 GroupID,Synthetic ID,Name,Population %
 0,0-0,grain_merchant,1.09
@@ -65,6 +65,7 @@ python post_processing/population_professions.py 10000
 |----------|-------------|
 | `total_population` | Target city population (default: 10000) |
 | `--input` | Path to profession distribution CSV |
+| `--ext-data-folder` | Folder containing external `professions_distribution.csv` |
 | `--output` | Path for generated profession population CSV |
 
 ---
@@ -123,16 +124,18 @@ python post_processing/population_professions.py 10000
 - Seeds 3–8 trade clusters (food, textiles, ceramics, metalworking, logistics, general)
 - Assigns nearby compatible buildings (shops/workshops/industrial/warehouse) within 120–200m radius
 
-#### Input files (all in `post_processing/input/`)
+#### Input files
+
+CityBuilder-generated geometry belongs in `post_processing/input/`; curated source data belongs in `post_processing/ext_data/`.
 
 | File | Required columns | Description |
 |------|------------------|-------------|
-| `buildings.csv` | `ID,entranceX,entranceY,entranceEdgeID,square,on_main_road` | Exported building geometry |
-| `nodes.csv` | `ID,positionX,positionY` | Road network nodes (MASON format) |
-| `edges.csv` | `ID,source,target,length,type` | Road network edges (MASON format) |
-| `roads.csv` | `ID,type,edges` | Road segments (semicolon-separated edge IDs) |
-| `professions_absolute_count.csv` | `Synthetic ID,Count,Name` | Output from `population_professions.py` |
-| `building_types_profession_mapping.csv` | `BuildingTypeID,BuildingTypeName,ProfessionID,MinNumberOfPeople,MaxNumberOfPeople` | Building type ↔ profession roles |
+| `input/buildings.csv` | `ID,entranceX,entranceY,entranceEdgeID,square,on_main_road` | CityBuilder-exported building geometry |
+| `input/nodes.csv` | `ID,positionX,positionY` | CityBuilder-exported road nodes (MASON format) |
+| `input/edges.csv` | `ID,source,target,length,type` | CityBuilder-exported road edges (MASON format) |
+| `input/roads.csv` | `ID,type,edges` | CityBuilder-exported road segments (semicolon-separated edge IDs) |
+| `ext_data/professions_absolute_count.csv` | `Synthetic ID,Count,Name` | Curated profession headcounts |
+| `ext_data/building_types_profession_mapping.csv` | `BuildingTypeID,BuildingTypeName,ProfessionID,MinNumberOfPeople,MaxNumberOfPeople` | Curated building type ↔ profession roles |
 
 #### Output files (written to `post_processing/output/`)
 
@@ -158,11 +161,13 @@ python post_processing/buildings_assign_function.py
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `--buildings` | `input/buildings.csv` | Building geometry CSV |
+| `--input-folder` | `input/` | Folder containing CityBuilder-generated geometry CSVs |
+| `--ext-data-folder` | `ext_data/` | Folder containing curated profession and building-type CSVs |
 | `--nodes` | `input/nodes.csv` | Road nodes CSV |
 | `--edges` | `input/edges.csv` | Road edges CSV |
 | `--roads` | `input/roads.csv` | Road segments CSV |
-| `--professions` | `input/professions_absolute_count.csv` | Profession headcounts CSV |
-| `--mapping` | `input/building_types_profession_mapping.csv` | Building type ↔ profession mapping |
+| `--professions` | `ext_data/professions_absolute_count.csv` | Profession headcounts CSV |
+| `--mapping` | `ext_data/building_types_profession_mapping.csv` | Building type ↔ profession mapping |
 | `--output` | `output/building_function_assignments.csv` | Enriched building assignments |
 | `--workers-output` | `output/building_function_workers.csv` | Per-building workforce detail |
 | `--seed` | `42` | Random seed for deterministic economic clusters |
@@ -173,7 +178,7 @@ python post_processing/buildings_assign_function.py
 
 ```bash
 # 1. Generate city in GUI or via API, export CSVs to post_processing/input/
-# 2. Generate profession headcounts for 10,000 population
+# 2. Generate profession headcounts from ext_data for 10,000 population
 python post_processing/population_professions.py 10000
 
 # 3. Assign functions and workers to buildings

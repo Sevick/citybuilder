@@ -96,6 +96,47 @@ def test_export_buildings_toggle_omits_buildings_and_keeps_roads():
             out.unlink()
 
 
+def test_export_only_includes_building_polygons():
+    from procedural_city_generation.export.city_csv import export_city_csv
+    from procedural_city_generation.export.city_json import export_city_json
+
+    class V:
+        def __init__(self, idx: int, x: float, y: float):
+            self.selfindex = idx
+            self.coords = (x, y)
+            self.neighbours = []
+
+    class P:
+        def __init__(self, vertices, poly_type: str):
+            self.vertices = vertices
+            self.poly_type = poly_type
+
+    v0, v1 = V(0, 0, 0), V(1, 10, 0)
+    v0.neighbours = [v1]
+    v1.neighbours = [v0]
+    region = P([(0, 2), (4, 2), (4, 6), (0, 6)], "vacant")
+    road_region = P([(4, 2), (8, 2), (8, 6), (4, 6)], "road")
+    building = P([(8, 2), (10, 2), (10, 4), (8, 4)], "lot")
+
+    out = Path(__file__).with_suffix(".buildings.tmp.json")
+    try:
+        export_city_json([v0, v1], [region, road_region, building], out, base_junction_id=0, base_road_id=0, base_building_id=20)
+        data = json.loads(out.read_text(encoding="utf-8"))
+        assert [item["id"] for item in data["buildings"]] == [20]
+
+        written = export_city_csv([v0, v1], [region, road_region, building], out.parent / "csv-buildings", base_junction_id=0, base_road_id=0, base_building_id=20)
+        with written["buildings"].open(encoding="utf-8") as handle:
+            assert [row["ID"] for row in __import__("csv").DictReader(handle)] == ["20"]
+    finally:
+        if out.exists():
+            out.unlink()
+        csv_dir = out.parent / "csv-buildings"
+        if csv_dir.exists():
+            for path in csv_dir.iterdir():
+                path.unlink()
+            csv_dir.rmdir()
+
+
 def test_export_merge_option_handles_turns_and_assigns_all_edges_once():
     from procedural_city_generation.export.city_json import export_city_json
 

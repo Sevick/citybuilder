@@ -67,6 +67,19 @@ def _centroid(points: Sequence[Sequence[float]]) -> tuple[float, float] | None:
     return (sx / n, sy / n)
 
 
+def _is_building_polygon(poly: Any) -> bool:
+    """Return whether a source polygon represents a building footprint.
+
+    The polygon generator uses ``lot`` for buildable footprints; it also emits
+    road, vacant, and block polygons that describe regions rather than
+    buildings.  Exporting the latter as buildings produces invalid city data.
+    ``building`` is accepted for callers that provide already-classified
+    footprints.
+    """
+    poly_type = getattr(poly, "poly_type", None)
+    return isinstance(poly_type, str) and poly_type.strip().lower() in {"lot", "building"}
+
+
 def _closest_point_on_segment(
     px: float,
     py: float,
@@ -445,7 +458,9 @@ def export_city_json(
 
     buildings = []
     if export_buildings:
-        for i, poly in enumerate(polygons or []):
+        for poly in polygons or []:
+            if not _is_building_polygon(poly):
+                continue
             verts = getattr(poly, "vertices", None)
             if not verts:
                 continue
@@ -462,7 +477,7 @@ def export_city_json(
             cx, cy = center
             road_id, seg_idx, offset = _nearest_road_access(cx, cy, road_segments)
 
-            b_id = base_building_id + i
+            b_id = base_building_id + len(buildings)
             poly_type = getattr(poly, "poly_type", None)
             name = getattr(poly, "name", None) or (f"{poly_type} {b_id}" if poly_type else f"Building {b_id}")
             floors = getattr(poly, "floors", None)

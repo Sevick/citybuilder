@@ -34,7 +34,7 @@ def test_export_city_csv_writes_requested_files_and_schema(tmp_path):
     v0.neighbours = [v1]
     v1.neighbours = [v0, v2]
     v2.neighbours = [v1]
-    poly = P([(12, 5), (16, 5), (16, 9), (12, 9)], name="House A")
+    poly = P([(12, 5), (16, 5), (16, 9), (12, 9)], name="House A", poly_type="lot")
 
     written = export_city_csv(
         [v0, v1, v2],
@@ -162,7 +162,7 @@ def test_export_city_csv_merge_roads_building_uses_segment_edge_id_for_entrance(
     v1.neighbours = [v0, v2]
     v2.neighbours = [v1, v3]
     v3.neighbours = [v2]
-    poly = P([(18, 5), (22, 5), (22, 9), (18, 9)])
+    poly = P([(18, 5), (22, 5), (22, 9), (18, 9)], poly_type="lot")
 
     written = export_city_csv(
         [v0, v1, v2, v3],
@@ -199,7 +199,7 @@ def test_export_city_csv_merge_roads_building_on_minor_branch_is_not_on_main_roa
     v1.neighbours = [v0, v2, v3]
     v2.neighbours = [v1]
     v3.neighbours = [v1]
-    poly = P([(12, 12), (16, 12), (16, 16), (12, 16)])
+    poly = P([(12, 12), (16, 12), (16, 16), (12, 16)], poly_type="lot")
 
     written = export_city_csv(
         [v0, v1, v2, v3],
@@ -235,7 +235,7 @@ def test_export_city_csv_merge_roads_minor_tail_on_major_road_counts_as_main(tmp
     v2.neighbours = [v1, v3]
     v3.neighbours = [v2, v4]
     v4.neighbours = [v3]
-    poly = P([(26, 5), (30, 5), (30, 9), (26, 9)])
+    poly = P([(26, 5), (30, 5), (30, 9), (26, 9)], poly_type="lot")
 
     written = export_city_csv(
         [v0, v1, v2, v3, v4],

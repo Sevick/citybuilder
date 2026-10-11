@@ -73,6 +73,8 @@ class GUI(QtWidgets.QMainWindow):
             self.ui.export_roads_button.clicked.connect(self.export_roads)
         if hasattr(self.ui, "export_csv_button"):
             self.ui.export_csv_button.clicked.connect(self.export_csv)
+        if hasattr(self.ui, "export_output_directory_browse"):
+            self.ui.export_output_directory_browse.clicked.connect(self.choose_export_output_directory)
         # export_buildings_button removed; buildings are controlled by a checkbox now
         if hasattr(self.ui, "scaleX_input") and hasattr(self.ui, "scaleY_input"):
             validator = QtGui.QDoubleValidator(0.000001, 1.0e12, 6, self)
@@ -381,6 +383,16 @@ class GUI(QtWidgets.QMainWindow):
             vertex_list = normalized_vertices
             polygons = normalized_polygons
 
+        default_output_dir = os.path.join(path, "outputs")
+        output_directory_widget = getattr(self.ui, "export_output_directory_input", None)
+        output_directory = output_directory_widget.text().strip() if output_directory_widget is not None else ""
+        if output_directory:
+            output_directory = os.path.expandvars(os.path.expanduser(output_directory))
+            if not os.path.isabs(output_directory):
+                output_directory = os.path.abspath(os.path.join(path, output_directory))
+        else:
+            output_directory = default_output_dir
+
         export_name = roadmap_name if vertex_list else (polys_name or "output")
         merge_roads = bool(getattr(getattr(self.ui, "merge_roads_checkbox", None), "isChecked", lambda: False)())
         export_buildings = bool(
@@ -388,6 +400,7 @@ class GUI(QtWidgets.QMainWindow):
         )
         return {
             "path": path,
+            "output_directory": output_directory,
             "export_name": export_name,
             "vertex_list": vertex_list or [],
             "polygons": polygons or [],
@@ -395,12 +408,34 @@ class GUI(QtWidgets.QMainWindow):
             "export_buildings": export_buildings,
         }
 
+    def choose_export_output_directory(self):
+        """Let the user select the directory used by both export commands."""
+        import procedural_city_generation
+
+        path = os.path.dirname(procedural_city_generation.__file__)
+        output_directory_widget = getattr(self.ui, "export_output_directory_input", None)
+        current_directory = output_directory_widget.text().strip() if output_directory_widget is not None else ""
+        if current_directory:
+            current_directory = os.path.expandvars(os.path.expanduser(current_directory))
+            if not os.path.isabs(current_directory):
+                current_directory = os.path.join(path, current_directory)
+        else:
+            current_directory = os.path.join(path, "outputs")
+
+        selected_directory = QtWidgets.QFileDialog.getExistingDirectory(
+            self,
+            "Choose export folder",
+            current_directory,
+        )
+        if selected_directory and output_directory_widget is not None:
+            output_directory_widget.setText(selected_directory)
+
     def export_roads(self):
         """Export junctions, roads, and (optionally) buildings to a combined JSON file."""
         try:
             from procedural_city_generation.export.city_json import export_city_json
             export_data = self._prepare_export_data()
-            out_dir = os.path.join(export_data["path"], "outputs")
+            out_dir = export_data["output_directory"]
             out_path = os.path.join(out_dir, f"{export_data['export_name']}_city.json")
             export_city_json(
                 export_data["vertex_list"],
@@ -421,7 +456,7 @@ class GUI(QtWidgets.QMainWindow):
         try:
             from procedural_city_generation.export.city_csv import export_city_csv
             export_data = self._prepare_export_data()
-            out_dir = os.path.join(export_data["path"], "outputs", f"{export_data['export_name']}_csv")
+            out_dir = os.path.join(export_data["output_directory"], f"{export_data['export_name']}_csv")
             written = export_city_csv(
                 export_data["vertex_list"],
                 export_data["polygons"],

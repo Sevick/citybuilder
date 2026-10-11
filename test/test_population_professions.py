@@ -13,7 +13,7 @@ from post_processing.population_professions import (
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = ROOT_DIR / "post_processing" / "population_professions.py"
-INPUT_PATH = ROOT_DIR / "post_processing" / "input" / "professions_distribution.csv"
+INPUT_PATH = ROOT_DIR / "post_processing" / "ext_data" / "professions_distribution.csv"
 
 
 def _read_rows(path: Path):
@@ -69,5 +69,30 @@ def test_population_professions_script_runs_as_standalone_cli(tmp_path):
     assert rows[0]["ProfessionID"] == "0-0"
     assert sum(int(row["NumberOfPeople"]) for row in rows) == 100
 
+
+def test_population_professions_cli_accepts_ext_data_folder(tmp_path):
+    ext_data_folder = tmp_path / "ext_data"
+    ext_data_folder.mkdir()
+    distribution_path = ext_data_folder / "professions_distribution.csv"
+    distribution_path.write_text(INPUT_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+    output_path = tmp_path / "population_professions.csv"
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_PATH),
+            "100",
+            "--ext-data-folder",
+            str(ext_data_folder),
+            "--output",
+            str(output_path),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+        cwd=ROOT_DIR,
+    )
+
+    assert sum(int(row["NumberOfPeople"]) for row in _read_rows(output_path)) == 100
 
 

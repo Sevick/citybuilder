@@ -16,7 +16,7 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent
-INPUT_PATH = BASE_DIR / "input" / "professions_supply_chain_dependencies.csv"
+INPUT_PATH = BASE_DIR / "ext_data" / "professions_supply_chain_dependencies.csv"
 OUTPUT_PATH = BASE_DIR / "output" / "profession_supply_chain_topo.csv"
 
 

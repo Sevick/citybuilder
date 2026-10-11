@@ -11,3 +11,5 @@ def test_export_tab_defaults_merge_roads_enabled():
 
     assert ui.merge_roads_checkbox.isChecked() is True
     assert ui.export_buildings_checkbox.isChecked() is True
+    assert ui.export_output_directory_input.text() == ""
+    assert ui.export_output_directory_browse.text() == "Browse..."

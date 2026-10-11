@@ -10,6 +10,7 @@ from .city_json import (
     _centroid,
     _entrance_point_for_building,
     _iter_edges,
+    _is_building_polygon,
     _nearest_road_access,
     _vertex_id,
 )
@@ -166,7 +167,9 @@ def export_city_csv(
     buildings: list[dict[str, Any]] = []
     building_shapes: list[dict[str, Any]] = []
     if export_buildings:
-        for i, poly in enumerate(polygons or []):
+        for poly in polygons or []:
+            if not _is_building_polygon(poly):
+                continue
             verts = getattr(poly, "vertices", None)
             if not verts:
                 continue
@@ -180,7 +183,7 @@ def export_city_csv(
             if center is None:
                 continue
 
-            building_id = base_building_id + i
+            building_id = base_building_id + len(buildings)
             poly_type = getattr(poly, "poly_type", None)
             entrance = _entrance_point_for_building(points, road_segments)
             if entrance is None:
