@@ -84,3 +84,6 @@ doc/videos
 # Logs
 logs/
 *.log
+
+# CSV files
+*.csv
