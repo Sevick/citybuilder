@@ -13,7 +13,6 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Iterable
 
-
 DEFAULT_TOTAL_POPULATION = 10_000
 BASE_DIR = Path(__file__).resolve().parent
 DEFAULT_INPUT_PATH = BASE_DIR / "ext_data" / "professions_distribution.csv"
@@ -67,7 +66,7 @@ def load_profession_distribution(input_path: Path) -> list[ProfessionDistributio
 
 
 def allocate_population(
-	distribution: Iterable[ProfessionDistribution], total_population: int
+		distribution: Iterable[ProfessionDistribution], total_population: int
 ) -> list[tuple[str, int]]:
 	"""Convert percentage weights into integer population counts.
 
@@ -119,9 +118,9 @@ def write_population_csv(rows: Iterable[tuple[str, int]], output_path: Path) -> 
 
 
 def generate_population_csv(
-	total_population: int,
-	input_path: Path = DEFAULT_INPUT_PATH,
-	output_path: Path = DEFAULT_OUTPUT_PATH,
+		total_population: int,
+		input_path: Path = DEFAULT_INPUT_PATH,
+		output_path: Path = DEFAULT_OUTPUT_PATH,
 ) -> Path:
 	"""Generate the profession population CSV and return its path."""
 	distribution = load_profession_distribution(input_path)

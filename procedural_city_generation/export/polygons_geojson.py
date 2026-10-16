@@ -18,52 +18,51 @@ from typing import Any, Iterable, Sequence
 
 
 def _closed_ring(coords: Sequence[Sequence[float]]) -> list[list[float]]:
-    ring = [[float(x), float(y)] for x, y in coords]
-    if not ring:
-        return ring
-    if ring[0] != ring[-1]:
-        ring.append(ring[0])
-    return ring
+	ring = [[float(x), float(y)] for x, y in coords]
+	if not ring:
+		return ring
+	if ring[0] != ring[-1]:
+		ring.append(ring[0])
+	return ring
 
 
 def export_polygon2d_list_to_geojson(polygons: Iterable[Any], out_path: str | Path) -> Path:
-    """Write a list of Polygon2D-like objects to GeoJSON.
+	"""Write a list of Polygon2D-like objects to GeoJSON.
 
-    Each object is expected to have:
-      - vertices: iterable of (x,y) (often numpy arrays)
-      - poly_type: string (e.g. 'lot', 'road', 'vacant')
+	Each object is expected to have:
+	  - vertices: iterable of (x,y) (often numpy arrays)
+	  - poly_type: string (e.g. 'lot', 'road', 'vacant')
 
-    Returns the written path.
-    """
+	Returns the written path.
+	"""
 
-    out_path = Path(out_path)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+	out_path = Path(out_path)
+	out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    features = []
-    for idx, poly in enumerate(polygons):
-        verts = getattr(poly, "vertices", None)
-        if verts is None:
-            continue
+	features = []
+	for idx, poly in enumerate(polygons):
+		verts = getattr(poly, "vertices", None)
+		if verts is None:
+			continue
 
-        # Convert vertices to a single exterior ring
-        ring = _closed_ring([(v[0], v[1]) for v in verts])
-        if len(ring) < 4:
-            # Not a valid polygon ring
-            continue
+		# Convert vertices to a single exterior ring
+		ring = _closed_ring([(v[0], v[1]) for v in verts])
+		if len(ring) < 4:
+			# Not a valid polygon ring
+			continue
 
-        props = {
-            "index": idx,
-            "poly_type": getattr(poly, "poly_type", None),
-        }
-        features.append(
-            {
-                "type": "Feature",
-                "geometry": {"type": "Polygon", "coordinates": [ring]},
-                "properties": props,
-            }
-        )
+		props = {
+			"index": idx,
+			"poly_type": getattr(poly, "poly_type", None),
+		}
+		features.append(
+			{
+				"type": "Feature",
+				"geometry": {"type": "Polygon", "coordinates": [ring]},
+				"properties": props,
+			}
+		)
 
-    fc = {"type": "FeatureCollection", "features": features}
-    out_path.write_text(json.dumps(fc, indent=2), encoding="utf-8")
-    return out_path
-
+	fc = {"type": "FeatureCollection", "features": features}
+	out_path.write_text(json.dumps(fc, indent=2), encoding="utf-8")
+	return out_path

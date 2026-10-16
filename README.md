@@ -1,6 +1,8 @@
 # Procedural City Generation
 
-This is fork from [Procedural City Generation](https://github.com/josauder/procedural_city_generation). All credits go to by [josauder](https://github.com/josauder). Documentation can be found [here](http://josauder.github.io/procedural_city_generation)
+This is fork from [Procedural City Generation](https://github.com/josauder/procedural_city_generation). All credits go
+to by [josauder](https://github.com/josauder). Documentation can be
+found [here](http://josauder.github.io/procedural_city_generation)
 
 #### Kindly open issues if you encounter bugs / need fixes.
 
@@ -18,14 +20,14 @@ This is fork from [Procedural City Generation](https://github.com/josauder/proce
 - importlib
 - pkgutil
 
-
 ## Running the program
 
 > `python3 GUI.py`
 
 ## Post-processing utilities
 
-The `post_processing/` directory contains two Python scripts that enrich the generated city with demographic and economic data for simulation.
+The `post_processing/` directory contains two Python scripts that enrich the generated city with demographic and
+economic data for simulation.
 
 ---
 
@@ -34,12 +36,14 @@ The `post_processing/` directory contains two Python scripts that enrich the gen
 **Purpose:** Converts a percentage-based profession distribution into absolute headcounts for a target population size.
 
 **Algorithm:**
+
 - Reads `professions_distribution.csv` containing columns `Synthetic ID` and `Population %`
 - Uses the **largest remainder method** (Hamilton method) to allocate integer counts deterministically
 - Guarantees the sum of allocated people exactly equals the target population
 - Uses `Decimal` arithmetic for precision
 
 **External data (`post_processing/ext_data/professions_distribution.csv`):**
+
 ```
 GroupID,Synthetic ID,Name,Population %
 0,0-0,grain_merchant,1.09
@@ -48,6 +52,7 @@ GroupID,Synthetic ID,Name,Population %
 ```
 
 **Output (`post_processing/output/population_professions.csv`):**
+
 ```
 ProfessionID,NumberOfPeople
 0-0,109
@@ -56,6 +61,7 @@ ProfessionID,NumberOfPeople
 ```
 
 **Usage:**
+
 ```bash
 python post_processing/population_professions.py 10000
 ```
@@ -72,74 +78,85 @@ python post_processing/population_professions.py 10000
 
 ### 2. `buildings_assign_function.py` — Assign functions, landmarks, and workforce to buildings
 
-**Purpose:** Takes exported city geometry (buildings, road network) and profession targets, then assigns each building a district, function, landmark status, and specific workforce composition.
+**Purpose:** Takes exported city geometry (buildings, road network) and profession targets, then assigns each building a
+district, function, landmark status, and specific workforce composition.
 
 #### Core functionality
 
 **A. Graph analysis & district classification**
+
 - Computes **betweenness centrality**, **closeness centrality**, and **degree** for all road nodes (Brandes algorithm)
 - Calculates a composite **forum score** = 0.5×betweenness + 0.3×closeness + 0.2×degree
 - Identifies the **forum center** (highest-scoring node cluster, up to 3 nodes within 150m)
 - Detects **major corridors** (top 15% edges by normalized betweenness)
 - Classifies each building into a **district** using spatial rules:
-  - `FORUM` — within 200m of forum center
-  - `MARKET` — within 400m of forum AND within 50m of major corridor
-  - `ELITE` — within 500m of forum AND below median road centrality
-  - `COMMERCIAL` — within 40m of major corridor
-  - `HOUSING` — within 900m of forum
-  - `WAREHOUSE` — near boundary (<120m) AND near corridor (<80m)
-  - `INDUSTRIAL` — everything else (peripheral)
+    - `FORUM` — within 200m of forum center
+    - `MARKET` — within 400m of forum AND within 50m of major corridor
+    - `ELITE` — within 500m of forum AND below median road centrality
+    - `COMMERCIAL` — within 40m of major corridor
+    - `HOUSING` — within 900m of forum
+    - `WAREHOUSE` — near boundary (<120m) AND near corridor (<80m)
+    - `INDUSTRIAL` — everything else (peripheral)
 
 **B. Landmark placement**
+
 - Places 5 landmark types in sequence at optimal locations:
-  - `FORUM` (type 34) — target 80m from forum center
-  - `TEMPLE` (type 33) — target 140m
-  - `MARKET` (type 25) — target 220m
-  - `COURTHOUSE` (type 45) — target 180m
-  - `BATHHOUSE` (type 30) — target 260m
+    - `FORUM` (type 34) — target 80m from forum center
+    - `TEMPLE` (type 33) — target 140m
+    - `MARKET` (type 25) — target 220m
+    - `COURTHOUSE` (type 45) — target 180m
+    - `BATHHOUSE` (type 30) — target 260m
 - Scoring combines distance-to-target, road access, forum proximity, and building size
 
 **C. Building function assignment**
+
 - Loads `building_types_profession_mapping.csv` defining 46 building types, each with:
-  - `BuildingTypeID`, `BuildingTypeName`
-  - Multiple `ProfessionID` roles with `MinNumberOfPeople` / `MaxNumberOfPeople`
-- Infers **category** for each type (public, shop, workshop, industrial, warehouse, elite, housing, tavern, service, entertainment, infrastructure, shady)
+    - `BuildingTypeID`, `BuildingTypeName`
+    - Multiple `ProfessionID` roles with `MinNumberOfPeople` / `MaxNumberOfPeople`
+- Infers **category** for each type (public, shop, workshop, industrial, warehouse, elite, housing, tavern, service,
+  entertainment, infrastructure, shady)
 - For each non-landmark building (processed by district priority, then size):
-  1. Scores all building types using weighted formula:
-     - 3.5×district-category weight
-     - 4.0×capacity coverage (how well it fills remaining profession deficits)
-     - 1.5×size fit (building area vs type capacity percentile)
-     - Location bonuses (forum proximity, corridor access, boundary distance, road centrality)
-     - 0.35×minimum-fit count
-  2. If best score > 0.9 and workers available → assign that type, allocate workers
-  3. Otherwise → assign **pseudo-function** based on district (e.g., `dense_housing`, `street_front_residence`, `storage_courtyard`)
+    1. Scores all building types using weighted formula:
+        - 3.5×district-category weight
+        - 4.0×capacity coverage (how well it fills remaining profession deficits)
+        - 1.5×size fit (building area vs type capacity percentile)
+        - Location bonuses (forum proximity, corridor access, boundary distance, road centrality)
+        - 0.35×minimum-fit count
+    2. If best score > 0.9 and workers available → assign that type, allocate workers
+    3. Otherwise → assign **pseudo-function** based on district (e.g., `dense_housing`, `street_front_residence`,
+       `storage_courtyard`)
 
 **D. Worker allocation**
+
 - For assigned building types, allocates workers per profession role:
-  - First satisfies `MinNumberOfPeople` per role (if available)
-  - Then distributes remaining capacity up to `MaxNumberOfPeople` prioritizing professions with largest remaining deficits
+    - First satisfies `MinNumberOfPeople` per role (if available)
+    - Then distributes remaining capacity up to `MaxNumberOfPeople` prioritizing professions with largest remaining
+      deficits
 - Tracks remaining profession counts; re-passes unassigned buildings if deficits remain
 
 **E. Economic clusters**
+
 - Seeds 3–8 trade clusters (food, textiles, ceramics, metalworking, logistics, general)
 - Assigns nearby compatible buildings (shops/workshops/industrial/warehouse) within 120–200m radius
 
 #### Input files
 
-CityBuilder-generated geometry belongs in `post_processing/input/`; curated source data belongs in `post_processing/ext_data/`.
+CityBuilder-generated geometry belongs in `post_processing/input/`; curated source data belongs in
+`post_processing/ext_data/`.
 
-| File | Required columns | Description |
-|------|------------------|-------------|
-| `input/buildings.csv` | `ID,entranceX,entranceY,entranceEdgeID,square,on_main_road` | CityBuilder-exported building geometry |
-| `input/nodes.csv` | `ID,positionX,positionY` | CityBuilder-exported road nodes (MASON format) |
-| `input/edges.csv` | `ID,source,target,length,type` | CityBuilder-exported road edges (MASON format) |
-| `input/roads.csv` | `ID,type,edges` | CityBuilder-exported road segments (semicolon-separated edge IDs) |
-| `ext_data/professions_absolute_count.csv` | `Synthetic ID,Count,Name` | Curated profession headcounts |
-| `ext_data/building_types_profession_mapping.csv` | `BuildingTypeID,BuildingTypeName,ProfessionID,MinNumberOfPeople,MaxNumberOfPeople` | Curated building type ↔ profession roles |
+| File                                             | Required columns                                                                   | Description                                                       |
+|--------------------------------------------------|------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| `input/buildings.csv`                            | `ID,entranceX,entranceY,entranceEdgeID,square,on_main_road`                        | CityBuilder-exported building geometry                            |
+| `input/nodes.csv`                                | `ID,positionX,positionY`                                                           | CityBuilder-exported road nodes (MASON format)                    |
+| `input/edges.csv`                                | `ID,source,target,length,type`                                                     | CityBuilder-exported road edges (MASON format)                    |
+| `input/roads.csv`                                | `ID,type,edges`                                                                    | CityBuilder-exported road segments (semicolon-separated edge IDs) |
+| `ext_data/professions_absolute_count.csv`        | `Synthetic ID,Count,Name`                                                          | Curated profession headcounts                                     |
+| `ext_data/building_types_profession_mapping.csv` | `BuildingTypeID,BuildingTypeName,ProfessionID,MinNumberOfPeople,MaxNumberOfPeople` | Curated building type ↔ profession roles                          |
 
 #### Output files (written to `post_processing/output/`)
 
 **`building_function_assignments.csv`** — One row per building:
+
 ```
 ID,entranceX,entranceY,entranceEdgeID,square,on_main_road,
 district,assigned_function,building_type_id,building_type_name,landmark,
@@ -148,11 +165,13 @@ road_centrality,local_density,worker_capacity,assigned_workers
 ```
 
 **`building_function_workers.csv`** — One row per building-profession assignment:
+
 ```
 buildingID,buildingTypeID,buildingTypeName,professionID,professionName,numberOfPeople
 ```
 
 #### Usage
+
 ```bash
 python post_processing/buildings_assign_function.py
 ```

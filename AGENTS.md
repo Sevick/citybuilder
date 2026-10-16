@@ -1,16 +1,17 @@
 # CityBuilder - Procedural City Generation
 
-This is a Python-based procedural city generator that creates road networks and building lots. It can export data compatible with the MASON simulation (the `sim` module in the parent project).
+This is a Python-based procedural city generator that creates road networks and building lots. It can export data
+compatible with the MASON simulation (the `sim` module in the parent project).
 
 ## Requirements
 
 - Python 3.10+
 - Dependencies (install via `pip install -r requirements.txt`):
-  - numpy
-  - scipy
-  - matplotlib
-  - PyQt5
-  - Pillow
+    - numpy
+    - scipy
+    - matplotlib
+    - PyQt5
+    - Pillow
 
 ## Quick Start
 
@@ -21,7 +22,8 @@ cd procedural_city_generation/roadmap
 python main.py
 ```
 
-This runs the roadmap generation using settings from `../inputs/roadmap.conf`. The output is a pickled vertex list saved to `../temp/<output_name>` (default: `mycity`).
+This runs the roadmap generation using settings from `../inputs/roadmap.conf`. The output is a pickled vertex list saved
+to `../temp/<output_name>` (default: `mycity`).
 
 ### 2. Generate Building Lots (Polygons)
 
@@ -30,7 +32,8 @@ cd ../polygons
 python main.py
 ```
 
-This reads the vertex list from `../temp/mycity` and generates polygons (lots, blocks, roads). Output is pickled to `../temp/mycity_polygons.txt`.
+This reads the vertex list from `../temp/mycity` and generates polygons (lots, blocks, roads). Output is pickled to
+`../temp/mycity_polygons.txt`.
 
 ### 3. Export to MASON Format (for sim module)
 
@@ -48,6 +51,7 @@ export_road_network_csv(vertex_list, out_dir="../output", basename="city")
 ```
 
 This creates:
+
 - `../output/city_nodes.csv` - columns: `node_id,x,y,minor_road,seed`
 - `../output/city_edges.csv` - columns: `source,target` (undirected, de-duplicated)
 
@@ -68,27 +72,29 @@ export_polygon2d_list_to_geojson(polygons, "../output/buildings.geojson")
 
 Edit `procedural_city_generation/inputs/roadmap.conf` to control generation:
 
-| Parameter | Description |
-|-----------|-------------|
-| `border_x`, `border_y` | Map bounds (max coordinate values) |
-| `axiom` | Initial seed vertices (list of [x,y] pairs) |
-| `pSeed` | Probability of minor roads from major roads |
-| `organiclMin/Max`, `radiallMin/Max`, `gridlMin/Max` | Road segment length ranges |
-| `rule_image_name` | Rule image from `inputs/rule_pictures/` |
-| `density_image_name` | Density image from `inputs/density_pictures/` |
-| `heightmap_name` | Heightmap from `inputs/heightmaps/` |
-| `output_name` | Base name for output files |
-| `plot` | Show live visualization during generation |
+| Parameter                                           | Description                                   |
+|-----------------------------------------------------|-----------------------------------------------|
+| `border_x`, `border_y`                              | Map bounds (max coordinate values)            |
+| `axiom`                                             | Initial seed vertices (list of [x,y] pairs)   |
+| `pSeed`                                             | Probability of minor roads from major roads   |
+| `organiclMin/Max`, `radiallMin/Max`, `gridlMin/Max` | Road segment length ranges                    |
+| `rule_image_name`                                   | Rule image from `inputs/rule_pictures/`       |
+| `density_image_name`                                | Density image from `inputs/density_pictures/` |
+| `heightmap_name`                                    | Heightmap from `inputs/heightmaps/`           |
+| `output_name`                                       | Base name for output files                    |
+| `plot`                                              | Show live visualization during generation     |
 
 ## Format Compatibility with sim Module
 
 **Important**: The sim module expects a different CSV format than what citybuilder exports directly.
 
 ### sim module expects:
+
 - `nodes.csv`: `ID,positionX,positionY`
 - `edges.csv`: `ID,source,target,length,type`
 
 ### citybuilder exports:
+
 - `*_nodes.csv`: `node_id,x,y,minor_road,seed`
 - `*_edges.csv`: `source,target` (undirected)
 
@@ -135,13 +141,13 @@ python Tester.py
 
 The package now exposes a tiny public API in `procedural_city_generation.api`:
 
-| Function | GUI equivalent | What it does |
-|----------|----------------|--------------|
-| `generate_all()` | *Run* in Roadmap → Polygons → Building Generation tabs | Executes the three generation steps sequentially, storing pickled intermediates in `temp/`. |
-| `export_csv(**opts)` | *Export* tab → **Export CSV** button | Loads the latest generated data and writes `nodes.csv`, `edges.csv`, `roads.csv`, `buildings.csv`, `buildings_shape.csv` to a directory. The first two files match the MASON `sim` module exactly (`ID,positionX,positionY` / `ID,source,target,length,type`). |
-| `export_roads(**opts)` | *Export* tab → **Export Roads** button | Writes a single combined JSON (`*_city.json`) containing the road network and optional building footprints. |
-| `generate_and_export_csv(**opts)` | — | Convenience: runs `generate_all()` then `export_csv()`. |
-| `generate_and_export_roads(**opts)` | — | Convenience: runs `generate_all()` then `export_roads()`. |
+| Function                            | GUI equivalent                                         | What it does                                                                                                                                                                                                                                                   |
+|-------------------------------------|--------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `generate_all()`                    | *Run* in Roadmap → Polygons → Building Generation tabs | Executes the three generation steps sequentially, storing pickled intermediates in `temp/`.                                                                                                                                                                    |
+| `export_csv(**opts)`                | *Export* tab → **Export CSV** button                   | Loads the latest generated data and writes `nodes.csv`, `edges.csv`, `roads.csv`, `buildings.csv`, `buildings_shape.csv` to a directory. The first two files match the MASON `sim` module exactly (`ID,positionX,positionY` / `ID,source,target,length,type`). |
+| `export_roads(**opts)`              | *Export* tab → **Export Roads** button                 | Writes a single combined JSON (`*_city.json`) containing the road network and optional building footprints.                                                                                                                                                    |
+| `generate_and_export_csv(**opts)`   | —                                                      | Convenience: runs `generate_all()` then `export_csv()`.                                                                                                                                                                                                        |
+| `generate_and_export_roads(**opts)` | —                                                      | Convenience: runs `generate_all()` then `export_roads()`.                                                                                                                                                                                                      |
 
 ### Quick example
 
@@ -202,6 +208,7 @@ json_path = export_roads(
 ```
 
 All functions accept the same keyword arguments as the GUI export dialog:
+
 - `merge_roads` (bool) – merge colinear segments into longer roads.
 - `export_buildings` (bool) – include building footprints.
 - `scale_x`, `scale_y` (float) – optional normalisation of coordinates into a `[0, scale]` range.
@@ -210,6 +217,7 @@ All functions accept the same keyword arguments as the GUI export dialog:
 ## Documentation
 
 Additional documentation in `doc/` (Sphinx format). Build with:
+
 ```bash
 cd doc
 make html

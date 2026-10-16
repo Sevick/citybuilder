@@ -18,7 +18,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
-
 BASE_DIR = Path(__file__).resolve().parent
 DEFAULT_BUILDINGS_PATH = BASE_DIR / "input" / "buildings.csv"
 DEFAULT_PROFESSIONS_PATH = BASE_DIR / "ext_data" / "professions_absolute_count.csv"
@@ -388,9 +387,9 @@ def _euclidean(point_a: tuple[float, float], point_b: tuple[float, float]) -> fl
 
 
 def _point_segment_distance(
-	point: tuple[float, float],
-	segment_start: tuple[float, float],
-	segment_end: tuple[float, float],
+		point: tuple[float, float],
+		segment_start: tuple[float, float],
+		segment_end: tuple[float, float],
 ) -> float:
 	px, py = point
 	x1, y1 = segment_start
@@ -464,8 +463,8 @@ def _infer_category(building_type_id: int, name: str) -> str:
 
 
 def load_building_type_mappings(
-	input_path: Path,
-	professions: dict[str, ProfessionTarget] | None = None,
+		input_path: Path,
+		professions: dict[str, ProfessionTarget] | None = None,
 ) -> dict[int, BuildingTypeDefinition]:
 	with input_path.open("r", encoding="utf-8", newline="") as handle:
 		reader = csv.DictReader(handle)
@@ -484,8 +483,10 @@ def load_building_type_mappings(
 
 			building_type_id = _parse_int(type_id_text, column="BuildingTypeID", path=input_path)
 			building_type_name = (row.get("BuildingTypeName") or "").strip() or f"Building Type {building_type_id}"
-			min_people = _parse_int((row.get("MinNumberOfPeople") or "").strip(), column="MinNumberOfPeople", path=input_path)
-			max_people = _parse_int((row.get("MaxNumberOfPeople") or "").strip(), column="MaxNumberOfPeople", path=input_path)
+			min_people = _parse_int((row.get("MinNumberOfPeople") or "").strip(), column="MinNumberOfPeople",
+									path=input_path)
+			max_people = _parse_int((row.get("MaxNumberOfPeople") or "").strip(), column="MaxNumberOfPeople",
+									path=input_path)
 
 			if min_people < 0 or max_people < 0:
 				raise ValueError(f"Negative worker range for building type {building_type_id} in {input_path}")
@@ -639,8 +640,8 @@ def _build_adjacency(edges: dict[int, EdgeRecord]) -> dict[int, list[tuple[int, 
 
 
 def _single_source_shortest_paths(
-	source: int,
-	adjacency: dict[int, list[tuple[int, float, int]]],
+		source: int,
+		adjacency: dict[int, list[tuple[int, float, int]]],
 ) -> dict[int, float]:
 	distances = {source: 0.0}
 	heap: list[tuple[float, int]] = [(0.0, source)]
@@ -657,9 +658,9 @@ def _single_source_shortest_paths(
 
 
 def compute_graph_metrics(
-	nodes: dict[int, NodeRecord],
-	edges: dict[int, EdgeRecord],
-	roads: dict[int, RoadRecord],
+		nodes: dict[int, NodeRecord],
+		edges: dict[int, EdgeRecord],
+		roads: dict[int, RoadRecord],
 ) -> GraphMetrics:
 	if not nodes or not edges:
 		center = (0.0, 0.0)
@@ -740,8 +741,8 @@ def compute_graph_metrics(
 	normalized_degree = _normalize(node_degree)
 	forum_scores = {
 		node_id: 0.5 * normalized_betweenness.get(node_id, 0.0)
-		+ 0.3 * normalized_closeness.get(node_id, 0.0)
-		+ 0.2 * normalized_degree.get(node_id, 0.0)
+				 + 0.3 * normalized_closeness.get(node_id, 0.0)
+				 + 0.2 * normalized_degree.get(node_id, 0.0)
 		for node_id in node_ids
 	}
 
@@ -765,7 +766,8 @@ def compute_graph_metrics(
 	)
 	normalized_edge_centrality = _normalize(edge_betweenness)
 	threshold = _quantile(normalized_edge_centrality.values(), 0.85)
-	major_edge_ids = {edge_id for edge_id, value in normalized_edge_centrality.items() if value >= threshold and value > 0}
+	major_edge_ids = {edge_id for edge_id, value in normalized_edge_centrality.items() if
+					  value >= threshold and value > 0}
 
 	if not major_edge_ids:
 		edge_lookup = _build_edge_road_lookup(roads)
@@ -773,8 +775,8 @@ def compute_graph_metrics(
 			edge_id
 			for edge_id, edge in edges.items()
 			if (edge.road_id is not None and roads.get(edge.road_id, RoadRecord(-1, 1, tuple())).road_type == 0)
-			or edge.edge_type == 0
-			or edge_lookup.get(edge_id) in {road_id for road_id, road in roads.items() if road.road_type == 0}
+			   or edge.edge_type == 0
+			   or edge_lookup.get(edge_id) in {road_id for road_id, road in roads.items() if road.road_type == 0}
 		}
 
 	forum_distances = _single_source_shortest_paths(forum_node_id, adjacency)
@@ -811,7 +813,8 @@ def _augment_edges_with_road_ids(edges: dict[int, EdgeRecord], roads: dict[int, 
 	return augmented
 
 
-def _edge_segments(edges: dict[int, EdgeRecord], nodes: dict[int, NodeRecord]) -> dict[int, tuple[tuple[float, float], tuple[float, float]]]:
+def _edge_segments(edges: dict[int, EdgeRecord], nodes: dict[int, NodeRecord]) -> dict[
+	int, tuple[tuple[float, float], tuple[float, float]]]:
 	segments: dict[int, tuple[tuple[float, float], tuple[float, float]]] = {}
 	for edge_id, edge in edges.items():
 		source = nodes.get(edge.source)
@@ -833,7 +836,7 @@ def _compute_local_density(buildings: list[BuildingRecord], radius: float) -> di
 	densities = {building.building_id: 0 for building in buildings}
 	for index, building in enumerate(buildings):
 		point_a = (building.x, building.y)
-		for other in buildings[index + 1 :]:
+		for other in buildings[index + 1:]:
 			if _euclidean(point_a, (other.x, other.y)) <= radius:
 				densities[building.building_id] += 1
 				densities[other.building_id] += 1
@@ -841,10 +844,10 @@ def _compute_local_density(buildings: list[BuildingRecord], radius: float) -> di
 
 
 def build_building_contexts(
-	buildings: list[BuildingRecord],
-	nodes: dict[int, NodeRecord],
-	edges: dict[int, EdgeRecord],
-	graph_metrics: GraphMetrics,
+		buildings: list[BuildingRecord],
+		nodes: dict[int, NodeRecord],
+		edges: dict[int, EdgeRecord],
+		graph_metrics: GraphMetrics,
 ) -> dict[str, BuildingContext]:
 	if not buildings:
 		return {}
@@ -874,8 +877,12 @@ def build_building_contexts(
 			source = nodes.get(edge.source)
 			target = nodes.get(edge.target)
 			if source is not None and target is not None:
-				source_distance = graph_metrics.forum_distances.get(edge.source, math.inf) + _euclidean(point, (source.x, source.y))
-				target_distance = graph_metrics.forum_distances.get(edge.target, math.inf) + _euclidean(point, (target.x, target.y))
+				source_distance = graph_metrics.forum_distances.get(edge.source, math.inf) + _euclidean(point,
+																										(source.x,
+																										 source.y))
+				target_distance = graph_metrics.forum_distances.get(edge.target, math.inf) + _euclidean(point,
+																										(target.x,
+																										 target.y))
 				forum_distance = min(forum_distance, source_distance, target_distance)
 		elif graph_metrics.forum_node_id is not None:
 			nearest_node_id = _nearest_node(building, nodes)
@@ -896,7 +903,8 @@ def build_building_contexts(
 		else:
 			distance_to_main_corridor = 0.0 if building.on_main_road else math.inf
 
-		road_centrality = graph_metrics.normalized_edge_centrality.get(nearest_edge_id, 1.0 if building.on_main_road else 0.0)
+		road_centrality = graph_metrics.normalized_edge_centrality.get(nearest_edge_id,
+																	   1.0 if building.on_main_road else 0.0)
 		boundary_distance = min(building.x - min_x, max_x - building.x, building.y - min_y, max_y - building.y)
 
 		if forum_distance < FORUM_DISTANCE_THRESHOLD:
@@ -947,10 +955,10 @@ def _profession_totals(professions: dict[str, ProfessionTarget]) -> dict[str, in
 
 
 def _allocate_workers_for_type(
-	building_type: BuildingTypeDefinition,
-	remaining: dict[str, int],
-	*,
-	allow_partial_minimums: bool,
+		building_type: BuildingTypeDefinition,
+		remaining: dict[str, int],
+		*,
+		allow_partial_minimums: bool,
 ) -> dict[str, int]:
 	allocated: dict[str, int] = {}
 	for role in building_type.roles:
@@ -970,8 +978,8 @@ def _allocate_workers_for_type(
 		return {}
 
 	for role in sorted(
-		building_type.roles,
-		key=lambda candidate: (-remaining.get(candidate.profession_id, 0), candidate.profession_id),
+			building_type.roles,
+			key=lambda candidate: (-remaining.get(candidate.profession_id, 0), candidate.profession_id),
 	):
 		current = allocated.get(role.profession_id, 0)
 		available = remaining.get(role.profession_id, 0)
@@ -984,12 +992,12 @@ def _allocate_workers_for_type(
 
 
 def _type_fit_score(
-	building: BuildingRecord,
-	context: BuildingContext,
-	building_type: BuildingTypeDefinition,
-	remaining: dict[str, int],
-	area_percentile: float,
-	target_totals: dict[str, int],
+		building: BuildingRecord,
+		context: BuildingContext,
+		building_type: BuildingTypeDefinition,
+		remaining: dict[str, int],
+		area_percentile: float,
+		target_totals: dict[str, int],
 ) -> float:
 	capacity_coverage = 0.0
 	min_fit_count = 0
@@ -997,7 +1005,8 @@ def _type_fit_score(
 		deficit = remaining.get(role.profession_id, 0)
 		if deficit <= 0:
 			continue
-		capacity_coverage += min(deficit, role.max_people) / max(1, target_totals.get(role.profession_id, role.max_people))
+		capacity_coverage += min(deficit, role.max_people) / max(1,
+																 target_totals.get(role.profession_id, role.max_people))
 		if deficit >= role.min_people:
 			min_fit_count += 1
 
@@ -1019,14 +1028,15 @@ def _type_fit_score(
 	if building.on_main_road and building_type.category in {"shop", "tavern", "service", "public"}:
 		location_bonus += 0.25
 
-	return (3.5 * category_weight) + (4.0 * capacity_coverage) + (1.5 * size_score) + location_bonus + (0.35 * min_fit_count)
+	return (3.5 * category_weight) + (4.0 * capacity_coverage) + (1.5 * size_score) + location_bonus + (
+			0.35 * min_fit_count)
 
 
 def _landmark_candidate_score(
-	building: BuildingRecord,
-	context: BuildingContext,
-	area_percentile: float,
-	landmark_name: str,
+		building: BuildingRecord,
+		context: BuildingContext,
+		area_percentile: float,
+		landmark_name: str,
 ) -> float:
 	target_distance = LANDMARK_DISTANCE_TARGETS[landmark_name]
 	distance_score = 1.0 / (1.0 + abs(context.forum_distance - target_distance) / 150.0)
@@ -1044,10 +1054,10 @@ def _landmark_candidate_score(
 
 
 def place_landmarks(
-	buildings: list[BuildingRecord],
-	contexts: dict[str, BuildingContext],
-	building_types: dict[int, BuildingTypeDefinition],
-	area_percentiles: dict[str, float],
+		buildings: list[BuildingRecord],
+		contexts: dict[str, BuildingContext],
+		building_types: dict[int, BuildingTypeDefinition],
+		area_percentiles: dict[str, float],
 ) -> dict[str, tuple[str, int]]:
 	assignments: dict[str, tuple[str, int]] = {}
 	used_buildings: set[str] = set()
@@ -1083,7 +1093,8 @@ def _commit_workers(remaining: dict[str, int], workers: dict[str, int]) -> None:
 
 def _trade_family(building_type_name: str) -> str:
 	lowered = building_type_name.lower()
-	if any(keyword in lowered for keyword in ("grain", "bakery", "fish", "butcher", "oil", "produce", "dairy", "tavern")):
+	if any(keyword in lowered for keyword in
+		   ("grain", "bakery", "fish", "butcher", "oil", "produce", "dairy", "tavern")):
 		return "food_trade"
 	if any(keyword in lowered for keyword in ("textile", "dye", "tailor", "tannery", "leather")):
 		return "textiles_and_leather"
@@ -1097,16 +1108,17 @@ def _trade_family(building_type_name: str) -> str:
 
 
 def assign_economic_clusters(
-	assignments: list[BuildingAssignment],
-	*,
-	seed: int,
+		assignments: list[BuildingAssignment],
+		*,
+		seed: int,
 ) -> None:
 	candidates = [
 		assignment
 		for assignment in assignments
 		if assignment.building_type_id is not None
-		and assignment.building_type_name
-		and TYPE_CATEGORY_OVERRIDES.get(assignment.building_type_id, "") in {"shop", "workshop", "industrial", "warehouse"}
+		   and assignment.building_type_name
+		   and TYPE_CATEGORY_OVERRIDES.get(assignment.building_type_id, "") in {"shop", "workshop", "industrial",
+																				"warehouse"}
 	]
 	if len(candidates) < 3:
 		return
@@ -1128,12 +1140,12 @@ def assign_economic_clusters(
 
 
 def assign_building_functions(
-	buildings: list[BuildingRecord],
-	building_types: dict[int, BuildingTypeDefinition],
-	professions: dict[str, ProfessionTarget],
-	contexts: dict[str, BuildingContext],
-	*,
-	seed: int,
+		buildings: list[BuildingRecord],
+		building_types: dict[int, BuildingTypeDefinition],
+		professions: dict[str, ProfessionTarget],
+		contexts: dict[str, BuildingContext],
+		*,
+		seed: int,
 ) -> tuple[list[BuildingAssignment], dict[str, int]]:
 	area_percentiles = _building_area_percentiles(buildings)
 	landmark_assignments = place_landmarks(buildings, contexts, building_types, area_percentiles)
@@ -1144,12 +1156,12 @@ def assign_building_functions(
 	unassigned_buildings = {building.building_id for building in buildings}
 
 	def _make_assignment(
-		building: BuildingRecord,
-		context: BuildingContext,
-		assigned_function: str,
-		*,
-		building_type: BuildingTypeDefinition | None,
-		landmark: str = "",
+			building: BuildingRecord,
+			context: BuildingContext,
+			assigned_function: str,
+			*,
+			building_type: BuildingTypeDefinition | None,
+			landmark: str = "",
 	) -> BuildingAssignment:
 		workers: dict[str, int] = {}
 		if building_type is not None:
@@ -1323,7 +1335,8 @@ def write_building_assignments_csv(assignments: list[BuildingAssignment], output
 					"economic_cluster": assignment.economic_cluster,
 					"forum_distance": f"{assignment.forum_distance:.2f}",
 					"distance_to_main_corridor": (
-						"inf" if math.isinf(assignment.distance_to_main_corridor) else f"{assignment.distance_to_main_corridor:.2f}"
+						"inf" if math.isinf(
+							assignment.distance_to_main_corridor) else f"{assignment.distance_to_main_corridor:.2f}"
 					),
 					"road_centrality": f"{assignment.road_centrality:.4f}",
 					"local_density": assignment.local_density,
@@ -1335,15 +1348,16 @@ def write_building_assignments_csv(assignments: list[BuildingAssignment], output
 
 
 def write_worker_assignments_csv(
-	assignments: list[BuildingAssignment],
-	professions: dict[str, ProfessionTarget],
-	output_path: Path,
+		assignments: list[BuildingAssignment],
+		professions: dict[str, ProfessionTarget],
+		output_path: Path,
 ) -> Path:
 	output_path.parent.mkdir(parents=True, exist_ok=True)
 	with output_path.open("w", encoding="utf-8", newline="") as handle:
 		writer = csv.DictWriter(
 			handle,
-			fieldnames=["buildingID", "buildingTypeID", "buildingTypeName", "professionID", "professionName", "numberOfPeople"],
+			fieldnames=["buildingID", "buildingTypeID", "buildingTypeName", "professionID", "professionName",
+						"numberOfPeople"],
 		)
 		writer.writeheader()
 		for assignment in assignments:
@@ -1365,16 +1379,16 @@ def write_worker_assignments_csv(
 
 
 def generate_building_function_csv(
-	*,
-	buildings_path: Path = DEFAULT_BUILDINGS_PATH,
-	professions_path: Path = DEFAULT_PROFESSIONS_PATH,
-	mapping_path: Path = DEFAULT_MAPPING_PATH,
-	nodes_path: Path | None = DEFAULT_NODES_PATH,
-	edges_path: Path | None = DEFAULT_EDGES_PATH,
-	roads_path: Path | None = DEFAULT_ROADS_PATH,
-	assignments_output_path: Path = DEFAULT_ASSIGNMENTS_OUTPUT_PATH,
-	workers_output_path: Path = DEFAULT_WORKERS_OUTPUT_PATH,
-	seed: int = 42,
+		*,
+		buildings_path: Path = DEFAULT_BUILDINGS_PATH,
+		professions_path: Path = DEFAULT_PROFESSIONS_PATH,
+		mapping_path: Path = DEFAULT_MAPPING_PATH,
+		nodes_path: Path | None = DEFAULT_NODES_PATH,
+		edges_path: Path | None = DEFAULT_EDGES_PATH,
+		roads_path: Path | None = DEFAULT_ROADS_PATH,
+		assignments_output_path: Path = DEFAULT_ASSIGNMENTS_OUTPUT_PATH,
+		workers_output_path: Path = DEFAULT_WORKERS_OUTPUT_PATH,
+		seed: int = 42,
 ) -> dict[str, Path | dict[str, int]]:
 	professions = load_profession_counts(professions_path)
 	building_types = load_building_type_mappings(mapping_path, professions)
@@ -1407,16 +1421,22 @@ def build_argument_parser() -> argparse.ArgumentParser:
 			"Assign landmark, district, and workplace functions to buildings from city export CSV files."
 		)
 	)
-	parser.add_argument("--input-folder", type=Path, default=None, help=f"Folder containing the city CSVs generated by CityBuilder. Defaults to {DEFAULT_BUILDINGS_PATH.parent}.")
-	parser.add_argument("--ext-data-folder", type=Path, default=None, help=f"Folder containing external profession and building-type CSVs. Defaults to {DEFAULT_PROFESSIONS_PATH.parent}.")
+	parser.add_argument("--input-folder", type=Path, default=None,
+						help=f"Folder containing the city CSVs generated by CityBuilder. Defaults to {DEFAULT_BUILDINGS_PATH.parent}.")
+	parser.add_argument("--ext-data-folder", type=Path, default=None,
+						help=f"Folder containing external profession and building-type CSVs. Defaults to {DEFAULT_PROFESSIONS_PATH.parent}.")
 	parser.add_argument("--buildings", type=Path, default=None, help="Path to buildings.csv. Overrides --input-folder.")
-	parser.add_argument("--professions", type=Path, default=None, help="Path to professions_absolute_count.csv. Overrides --ext-data-folder.")
-	parser.add_argument("--mapping", type=Path, default=None, help="Path to building_types_profession_mapping.csv. Overrides --ext-data-folder.")
+	parser.add_argument("--professions", type=Path, default=None,
+						help="Path to professions_absolute_count.csv. Overrides --ext-data-folder.")
+	parser.add_argument("--mapping", type=Path, default=None,
+						help="Path to building_types_profession_mapping.csv. Overrides --ext-data-folder.")
 	parser.add_argument("--nodes", type=Path, default=None, help="Path to nodes.csv. Overrides --input-folder.")
 	parser.add_argument("--edges", type=Path, default=None, help="Path to edges.csv. Overrides --input-folder.")
 	parser.add_argument("--roads", type=Path, default=None, help="Path to roads.csv. Overrides --input-folder.")
-	parser.add_argument("--output", type=Path, default=DEFAULT_ASSIGNMENTS_OUTPUT_PATH, help=f"Path for the enriched building assignments CSV. Defaults to {DEFAULT_ASSIGNMENTS_OUTPUT_PATH}.")
-	parser.add_argument("--workers-output", type=Path, default=DEFAULT_WORKERS_OUTPUT_PATH, help=f"Path for the per-building workforce CSV. Defaults to {DEFAULT_WORKERS_OUTPUT_PATH}.")
+	parser.add_argument("--output", type=Path, default=DEFAULT_ASSIGNMENTS_OUTPUT_PATH,
+						help=f"Path for the enriched building assignments CSV. Defaults to {DEFAULT_ASSIGNMENTS_OUTPUT_PATH}.")
+	parser.add_argument("--workers-output", type=Path, default=DEFAULT_WORKERS_OUTPUT_PATH,
+						help=f"Path for the per-building workforce CSV. Defaults to {DEFAULT_WORKERS_OUTPUT_PATH}.")
 	parser.add_argument("--seed", type=int, default=42, help="Random seed used for deterministic economic clusters.")
 	return parser
 
@@ -1451,6 +1471,3 @@ def main() -> int:
 
 if __name__ == "__main__":
 	raise SystemExit(main())
-
-
-
